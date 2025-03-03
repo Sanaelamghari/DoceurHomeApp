@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">DouceurHomeApp</string>
+    <string name="douceur_home">DouceurHomeWare</string>
+    <string name="bestseller">Bestseller</string>
+    <string name="buy">Buy</string>
+    <string name="docoeur_hom">Docoeur\nHomewear</string>
+    <string name="douceur_homewear">Douceur\nHomewear</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
+    <string name="forget_pass">Forgot Password?</string>
+    <string name="already_hav">Already have an account? Sign in</string>
+    <string name="underlined_html"><![CDATA[<u>Categories</u>]]></string>
+    <string name="produit_html"><![CDATA[<u>Produits</u>]]></string>
+</resources>
+
+

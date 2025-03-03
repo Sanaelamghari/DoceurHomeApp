@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignupActivity">
+
+    <LinearLayout
+        android:layout_width="409dp"
+        android:layout_height="844dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView"
+
+            android:layout_width="260dp"
+
+            android:layout_height="100dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="80dp"
+            android:fontFamily="serif"
+
+            android:gravity="top"
+            android:text="Sign up"
+            android:textAppearance="@style/docoeur_hom"
+            android:textColor="#0E0D0D"
+            android:textSize="60sp"
+            android:textStyle="bold" />
+
+
+        <EditText
+            android:id="@+id/fullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#8B0000"
+            android:hint="Full Name"
+            android:drawableRight="@drawable/persongrona"
+            android:inputType="textPersonName"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#808080" />
+
+        <!-- Champ pour l'email -->
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#8B0000"
+            android:hint="Email"
+            android:drawableRight="@drawable/email"
+            android:inputType="textEmailAddress"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#808080" />
+
+        <!-- Champ pour le mot de passe -->
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#8B0000"
+            android:hint="Password"
+
+            android:inputType="textPassword"
+            android:drawableRight="@drawable/eyesgrona"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#808080" />
+
+        <!-- Champ pour le numéro de téléphone -->
+        <EditText
+            android:id="@+id/phoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#8B0000"
+            android:hint="Phone Number"
+            android:drawableRight="@drawable/phone"
+            android:inputType="phone"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#808080" />
+
+        <!-- Champ pour l'adresse -->
+        <EditText
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#8B0000"
+            android:hint="Address"
+            android:drawableRight="@drawable/baseline_location_on_24"
+            android:inputType="textPostalAddress"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#808080" />
+
+        <Button
+
+            android:id="@+id/signup_button"
+            android:layout_width="290dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="30dp"
+            android:backgroundTint="#8B0000"
+            android:fontFamily="serif"
+            android:text="Sign up"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="218dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:fontFamily="serif"
+                android:text="Already have an account ? "
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:fontFamily="serif"
+
+                android:text="sign in"
+                android:textColor="#4C1D1D"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CategoryActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="419dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="800dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="40dp"
+            android:layout_height="22dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="240dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/arrow_back" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/list_grona" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="413dp"
+        android:layout_height="43dp"
+        android:layout_marginBottom="736dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+
+            android:layout_marginLeft="60px"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/search" />
+
+        <EditText
+            android:id="@+id/editTextText"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="40dp"
+
+            android:hint="Search..."
+            android:padding="12dp"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="412dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="700dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
+
+        <TextView
+            android:id="@+id/Categorys"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="150dp"
+            android:fontFamily="serif"
+            android:text="@string/underlined_html"
+            android:textColor="#5C2D2D"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="409dp"
+        android:layout_height="698dp"
+        android:layout_marginTop="16dp"
+        app:columnCount="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
+        <FrameLayout
+            android:layout_width="194dp"
+            android:layout_height="287dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginRight="5dp"
+            app:layout_column="1"
+            app:layout_row="0">
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="194dp"
+            android:layout_height="287dp"
+            app:layout_column="0"
+            app:layout_row="1">
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/category_image_1"
+            android:layout_width="193dp"
+            android:layout_height="310dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            app:layout_column="0"
+            app:layout_row="0"
+            app:srcCompat="@drawable/mrayat" />
+
+        <TextView
+            android:id="@+id/category_title_1"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="40dp"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:text="Wall decor and mirror"
+            android:textColor="#F4F2F2"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_column="0"
+            app:layout_row="0" />
+
+
+        <ImageView
+            android:id="@+id/category_image_2"
+            android:layout_width="199dp"
+            android:layout_height="wrap_content"
+            app:layout_column="0"
+            app:layout_row="1"
+            app:srcCompat="@drawable/mkhade" />
+
+
+
+        <FrameLayout
+            android:layout_width="194dp"
+            android:layout_height="287dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginRight="5dp"
+            app:layout_column="1"
+            app:layout_row="1">
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="197dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            app:layout_column="1"
+            app:layout_row="1"
+            app:srcCompat="@drawable/xm3" />
+
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="40dp"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:textColor="#F4F2F2"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_column="0"
+            app:layout_row="0" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="100dp"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:shadowColor="#F6F3F3"
+            android:text="otanicals and vases"
+            android:textColor="#FBF9F9"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_column="1"
+            app:layout_row="0" />
+
+        <TextView
+            android:id="@+id/category_title_2"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="40dp"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:text="Pillows and throws"
+            android:textColor="#F6F2F2"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_column="0"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="100dp"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:text="Candles and home fragrance"
+            android:textColor="#F6F5F5"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_column="1"
+            app:layout_row="1" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginRight="10dp"
+            app:layout_column="1"
+            app:layout_row="0"
+            app:srcCompat="@drawable/vases_cat" />
+
+    </androidx.gridlayout.widget.GridLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
