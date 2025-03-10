@@ -17,7 +17,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
-
+//Sanaelamghari
 class AddProductActivity : AppCompatActivity() {
 
     private lateinit var etProductName: EditText
