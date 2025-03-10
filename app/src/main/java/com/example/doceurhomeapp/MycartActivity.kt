@@ -1,5 +1,6 @@
 package com.example.doceurhomeapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -139,7 +140,11 @@ class MycartActivity : AppCompatActivity() {
                     .add(commande)
                     .addOnSuccessListener { docRef ->
                         Log.d("MycartActivity", "✅ Commande enregistrée avec ID : ${docRef.id}")
+
                         // Afficher un message ou naviguer vers une autre page
+                        val intent = Intent(this, paimentActivity::class.java)
+                        startActivity(intent)
+
                     }
                     .addOnFailureListener { e ->
                         Log.e("MycartActivity", "❌ Erreur enregistrement commande : ${e.message}", e)

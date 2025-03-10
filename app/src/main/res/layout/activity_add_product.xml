@@ -35,6 +35,12 @@
         android:text="Sélectionner une image"/>
 
     <Button
+        android:id="@+id/btnSelectDetailImages"
+        android:layout_width="228dp"
+        android:layout_height="wrap_content"
+        android:text="SelectDetailImages" />
+
+    <Button
         android:id="@+id/btnAddProduct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -124,7 +124,6 @@
             app:layout_row="1">
 
         </FrameLayout>
-
         <ImageView
             android:id="@+id/category_image_1"
             android:layout_width="193dp"
@@ -134,7 +133,6 @@
             app:layout_column="0"
             app:layout_row="0"
             app:srcCompat="@drawable/mrayat" />
-
         <TextView
             android:id="@+id/category_title_1"
             android:layout_width="120dp"
@@ -149,8 +147,6 @@
             android:textStyle="bold"
             app:layout_column="0"
             app:layout_row="0" />
-
-
         <ImageView
             android:id="@+id/category_image_2"
             android:layout_width="199dp"
@@ -159,8 +155,6 @@
             app:layout_row="1"
             app:srcCompat="@drawable/mkhade" />
 
-
-
         <FrameLayout
             android:layout_width="194dp"
             android:layout_height="287dp"
@@ -168,9 +162,7 @@
             android:layout_marginRight="5dp"
             app:layout_column="1"
             app:layout_row="1">
-
         </FrameLayout>
-
         <ImageView
             android:id="@+id/imageView11"
             android:layout_width="197dp"
@@ -179,8 +171,6 @@
             app:layout_column="1"
             app:layout_row="1"
             app:srcCompat="@drawable/xm3" />
-
-
         <TextView
             android:id="@+id/textView8"
             android:layout_width="120dp"
@@ -195,7 +185,6 @@
             android:visibility="visible"
             app:layout_column="0"
             app:layout_row="0" />
-
         <TextView
             android:id="@+id/textView11"
             android:layout_width="120dp"
@@ -211,7 +200,6 @@
             android:textStyle="bold"
             app:layout_column="1"
             app:layout_row="0" />
-
         <TextView
             android:id="@+id/category_title_2"
             android:layout_width="120dp"
@@ -226,7 +214,6 @@
             android:textStyle="bold"
             app:layout_column="0"
             app:layout_row="1" />
-
         <TextView
             android:id="@+id/textView13"
             android:layout_width="140dp"
@@ -241,7 +228,6 @@
             android:textStyle="bold"
             app:layout_column="1"
             app:layout_row="1" />
-
         <ImageView
             android:id="@+id/imageView9"
             android:layout_width="186dp"
@@ -254,6 +240,4 @@
             app:srcCompat="@drawable/vases_cat" />
 
     </androidx.gridlayout.widget.GridLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

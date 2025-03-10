@@ -25,7 +25,9 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var etProductPrice: EditText
     private lateinit var btnSelectImage: Button
     private lateinit var btnAddProduct: Button
+    private lateinit var btnSelectDetailImages: Button
     private var selectedImageUri: Uri? = null
+    private val selectedDetailImages = mutableListOf<Uri>()
     private val firestore = FirebaseFirestore.getInstance()
 
     private val CLOUD_NAME = "dbmk56fhn"
@@ -41,9 +43,14 @@ class AddProductActivity : AppCompatActivity() {
         etProductPrice = findViewById(R.id.etProductPrice)
         btnSelectImage = findViewById(R.id.btnSelectImage)
         btnAddProduct = findViewById(R.id.btnAddProduct)
+        btnSelectDetailImages = findViewById(R.id.btnSelectDetailImages)
 
         btnSelectImage.setOnClickListener {
-            openImagePicker()
+            openImagePicker(IMAGE_PICKER_REQUEST)
+        }
+
+        btnSelectDetailImages.setOnClickListener {
+            openImagePicker(DETAIL_IMAGES_PICKER_REQUEST, true)
         }
 
         btnAddProduct.setOnClickListener {
@@ -51,79 +58,91 @@ class AddProductActivity : AppCompatActivity() {
         }
     }
 
-    private fun openImagePicker() {
-        val intent = Intent(Intent.ACTION_PICK)
+    private fun openImagePicker(requestCode: Int, allowMultiple: Boolean = false) {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
-        startActivityForResult(intent, IMAGE_PICKER_REQUEST)
+        if (allowMultiple) intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        startActivityForResult(intent, requestCode)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMAGE_PICKER_REQUEST && resultCode == RESULT_OK) {
-            selectedImageUri = data?.data
-            if (selectedImageUri != null) {
-                Log.d("ImageDebug", "Image sélectionnée : $selectedImageUri")
-                Toast.makeText(this, "Image sélectionnée", Toast.LENGTH_SHORT).show()
-            } else {
-                Log.e("ImageDebug", "Aucune image sélectionnée")
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                IMAGE_PICKER_REQUEST -> {
+                    selectedImageUri = data?.data
+                    Log.d("ImageDebug", "Image principale sélectionnée: $selectedImageUri")
+                }
+                DETAIL_IMAGES_PICKER_REQUEST -> {
+                    data?.clipData?.let {
+                        for (i in 0 until it.itemCount) {
+                            selectedDetailImages.add(it.getItemAt(i).uri)
+                        }
+                    } ?: data?.data?.let {
+                        selectedDetailImages.add(it)
+                    }
+                    Log.d("ImageDebug", "Images détaillées sélectionnées: $selectedDetailImages")
+                }
             }
         }
     }
 
     private fun uploadImageToCloudinary() {
         if (selectedImageUri == null) {
-            Toast.makeText(this, "Veuillez sélectionner une image", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Veuillez sélectionner une image principale", Toast.LENGTH_SHORT).show()
+            return
+        }
+        uploadToCloudinary(selectedImageUri!!) { mainImageUrl ->
+            uploadDetailImagesToCloudinary(mainImageUrl)
+        }
+    }
+
+    private fun uploadDetailImagesToCloudinary(mainImageUrl: String) {
+        val detailImageUrls = mutableListOf<String>()
+        var uploadCount = 0
+        if (selectedDetailImages.isEmpty()) {
+            saveProductToFirestore(mainImageUrl, detailImageUrls)
             return
         }
 
-        val file = getFileFromUri(selectedImageUri!!)
-        if (file == null) {
-            Toast.makeText(this, "Erreur lors de la récupération du fichier", Toast.LENGTH_SHORT).show()
-            return
+        selectedDetailImages.forEach { uri ->
+            uploadToCloudinary(uri) { imageUrl ->
+                detailImageUrls.add(imageUrl)
+                uploadCount++
+                if (uploadCount == selectedDetailImages.size) {
+                    saveProductToFirestore(mainImageUrl, detailImageUrls)
+                }
+            }
         }
+    }
 
+    private fun uploadToCloudinary(uri: Uri, callback: (String) -> Unit) {
+        val file = getFileFromUri(uri) ?: return
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("file", file.name, file.asRequestBody("image/*".toMediaTypeOrNull()))
             .addFormDataPart("upload_preset", UPLOAD_PRESET)
             .build()
 
-        val request = Request.Builder()
-            .url(CLOUDINARY_URL)
-            .post(requestBody)
-            .build()
-
+        val request = Request.Builder().url(CLOUDINARY_URL).post(requestBody).build()
         val client = OkHttpClient()
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e("Cloudinary", "Erreur d'upload : ${e.message}")
-                runOnUiThread {
-                    Toast.makeText(this@AddProductActivity, "Erreur d'upload de l'image", Toast.LENGTH_SHORT).show()
-                }
+                Log.e("Cloudinary", "Erreur d'upload: ${e.message}")
             }
-
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     val responseData = response.body?.string()
                     val jsonResponse = JSONObject(responseData ?: "")
                     val imageUrl = jsonResponse.getString("secure_url")
-
-                    Log.d("Cloudinary", "Image uploadée : $imageUrl")
-                    runOnUiThread {
-                        Toast.makeText(this@AddProductActivity, "Image uploadée !", Toast.LENGTH_SHORT).show()
-                        saveProductToFirestore(imageUrl)
-                    }
-                } else {
-                    Log.e("Cloudinary", "Réponse invalide : ${response.message}")
-                    runOnUiThread {
-                        Toast.makeText(this@AddProductActivity, "Erreur lors de l'upload", Toast.LENGTH_SHORT).show()
-                    }
+                    Log.d("Cloudinary", "Image uploadée: $imageUrl")
+                    callback(imageUrl)
                 }
             }
         })
     }
 
-    private fun saveProductToFirestore(imageUrl: String) {
+    private fun saveProductToFirestore(imageUrl: String, detailImages: List<String>) {
         val productName = etProductName.text.toString()
         val productDescription = etProductDescription.text.toString()
         val productPrice = etProductPrice.text.toString()
@@ -137,18 +156,17 @@ class AddProductActivity : AppCompatActivity() {
             "name" to productName,
             "description" to productDescription,
             "price" to productPrice,
-            "imageUrl" to imageUrl
+            "imageUrl" to imageUrl,
+            "detailImages" to detailImages
         )
 
-        firestore.collection("products")
-            .add(product)
+        firestore.collection("products").add(product)
             .addOnSuccessListener {
-                Toast.makeText(this, "Produit ajouté avec succès", Toast.LENGTH_SHORT).show()
+                Log.d("Firestore", "Produit ajouté avec succès")
                 finish()
             }
             .addOnFailureListener { e ->
-                Log.e("FirestoreError", "Erreur Firestore : ${e.message}")
-                Toast.makeText(this, "Erreur lors de l'ajout", Toast.LENGTH_SHORT).show()
+                Log.e("Firestore", "Erreur Firestore: ${e.message}")
             }
     }
 
@@ -156,19 +174,19 @@ class AddProductActivity : AppCompatActivity() {
         return try {
             val inputStream = contentResolver.openInputStream(uri) ?: return null
             val file = File(cacheDir, "temp_image.jpg")
-            file.outputStream().use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
+            file.outputStream().use { inputStream.copyTo(it) }
             file
         } catch (e: Exception) {
-            Log.e("FileError", "Erreur lors de la conversion de l'URI en fichier : ${e.message}")
+            Log.e("FileError", "Erreur conversion URI en fichier: ${e.message}")
             null
         }
     }
 
     companion object {
         private const val IMAGE_PICKER_REQUEST = 1
+        private const val DETAIL_IMAGES_PICKER_REQUEST = 2
     }
 }
+
 
 

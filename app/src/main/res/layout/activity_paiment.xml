@@ -1,233 +1,78 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".paimentActivity">
-
-    <!-- Champ pour l'email -->
-
-    <!-- Champ pour le mot de passe -->
-
-    <!-- Champ pour le numéro de téléphone -->
-
-    <!-- Champ pour l'adresse -->
-
-    <ImageView
-        android:id="@+id/imageView31"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="147dp"
-        android:layout_marginBottom="727dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/stripe" />
-
-    <ImageView
-        android:id="@+id/imageView32"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="734dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/imageView31"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/visa" />
-
-    <EditText
-        android:id="@+id/input_name"
-        android:layout_width="351dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="216dp"
-        android:backgroundTint="#8B0000"
-
-        android:hint="Exp date"
-        android:inputType="textPersonName"
-        android:padding="12dp"
-        android:textColor="#000000"
-        android:textColorHint="#808080"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_email" />
-
-    <EditText
-        android:id="@+id/input_email"
-        android:layout_width="351dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="33dp"
-        android:layout_marginBottom="30dp"
-        android:backgroundTint="#8B0000"
-
-        android:hint="CVC.."
-        android:inputType="textEmailAddress"
-        android:padding="12dp"
-        android:textColor="#000000"
-        android:textColorHint="#808080"
-        app:layout_constraintBottom_toTopOf="@+id/input_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_password" />
-
-    <EditText
-        android:id="@+id/input_password"
-        android:layout_width="351dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="17dp"
-
-        android:layout_marginEnd="33dp"
-        android:layout_marginBottom="22dp"
-        android:backgroundTint="#8B0000"
-
-        android:hint="card number.."
-        android:inputType="textPassword"
-        android:padding="12dp"
-        android:textColor="#000000"
-        android:textColorHint="#808080"
-        app:layout_constraintBottom_toTopOf="@+id/input_email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_phone" />
-
-    <EditText
-        android:id="@+id/input_phone"
-        android:layout_width="355dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="26dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="27dp"
-        android:backgroundTint="#8B0000"
-
-        android:hint="Name or card.."
-        android:inputType="phone"
-        android:padding="12dp"
-        android:textColor="#000000"
-        android:textColorHint="#808080"
-        app:layout_constraintBottom_toTopOf="@+id/input_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_address" />
-
-    <EditText
-        android:id="@+id/input_address"
-        android:layout_width="354dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="110dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="#8B0000"
-
-        android:hint="payment methode"
-        android:inputType="textPostalAddress"
-        android:padding="12dp"
-        android:textColor="#000000"
-        android:textColorHint="#808080"
-        app:layout_constraintBottom_toTopOf="@+id/input_phone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView31" />
+    android:padding="16dp">
 
     <LinearLayout
-        android:id="@+id/linearLayout10"
-        android:layout_width="342dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="34dp"
-        android:layout_marginBottom="138dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_name">
-
-        <TextView
-            android:id="@+id/textView20"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Total : "
-            android:textSize="30sp"
-            android:textStyle="bold|italic" />
-
-        <TextView
-            android:id="@+id/textView23"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#5C2A2A"
-            android:text="200$"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="181dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="113dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="117dp"
-        android:layout_marginBottom="56dp"
-        android:text="pass order"
-        android:backgroundTint="#8B0000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout10" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout11"
-        android:layout_width="393dp"
-        android:layout_height="29dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/imageView31"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="42dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="350dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/arrow_back" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/imageView21"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="37dp"
-        android:layout_marginBottom="103dp"
-        app:layout_constraintBottom_toTopOf="@+id/input_address"
-        app:layout_constraintEnd_toStartOf="@+id/imageView31"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout11"
-        app:srcCompat="@drawable/paypal" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/etFullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nom et Prénom"
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/etBillingAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Adresse de facturation"
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/etShippingAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Adresse de livraison (si différente)"
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/etPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Numéro de téléphone"
+            android:inputType="phone"
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Méthode de paiement"
+            android:textSize="16sp"
+            android:paddingTop="8dp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupPayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/rbCashOnDelivery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Paiement à la livraison"
+                android:checked="true"/>
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnConfirmPayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirmer le paiement"
+            android:layout_marginTop="16dp"/>
+
+    </LinearLayout>
+</ScrollView>
+
