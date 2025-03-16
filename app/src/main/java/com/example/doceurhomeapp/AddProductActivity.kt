@@ -28,12 +28,14 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var etProductPrice: EditText
     private lateinit var etCategoryName: EditText
     private lateinit var btnSelectCategoryImage: Button
+    private lateinit var btnSelectProductImage: Button
     private lateinit var btnAddCategory: Button
     private lateinit var spinnerCategories: Spinner
     private lateinit var btnAddProduct: Button
 
     // Variables pour la gestion des images et des données
     private var selectedCategoryImageUri: Uri? = null
+    private var selectedProductImageUri: Uri? = null
     private val firestore = FirebaseFirestore.getInstance()
     private val categories = mutableListOf<String>()
     private lateinit var categoriesAdapter: ArrayAdapter<String>
@@ -53,6 +55,7 @@ class AddProductActivity : AppCompatActivity() {
         etProductPrice = findViewById(R.id.etProductPrice)
         etCategoryName = findViewById(R.id.etCategoryName)
         btnSelectCategoryImage = findViewById(R.id.btnSelectCategoryImage)
+        btnSelectProductImage = findViewById(R.id.btnSelectImage)
         btnAddCategory = findViewById(R.id.btnAddCategory)
         spinnerCategories = findViewById(R.id.spinnerCategories)
         btnAddProduct = findViewById(R.id.btnAddProduct)
@@ -67,7 +70,11 @@ class AddProductActivity : AppCompatActivity() {
 
         // Gestion des clics
         btnSelectCategoryImage.setOnClickListener {
-            openImagePicker(IMAGE_PICKER_REQUEST)
+            openImagePicker(IMAGE_PICKER_REQUEST_CATEGORY)
+        }
+
+        btnSelectProductImage.setOnClickListener {
+            openImagePicker(IMAGE_PICKER_REQUEST_PRODUCT)
         }
 
         btnAddCategory.setOnClickListener {
@@ -99,8 +106,15 @@ class AddProductActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Enregistrer le produit dans Firestore
-            saveProductToFirestore(productName, productDescription, productPrice, categoryName)
+            if (selectedProductImageUri == null) {
+                Toast.makeText(this, "Veuillez sélectionner une image pour le produit", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Upload de l'image du produit vers Cloudinary
+            uploadImageToCloudinary(selectedProductImageUri!!) { imageUrl ->
+                saveProductToFirestore(productName, productDescription, productPrice, categoryName, imageUrl)
+            }
         }
     }
 
@@ -116,9 +130,13 @@ class AddProductActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                IMAGE_PICKER_REQUEST -> {
+                IMAGE_PICKER_REQUEST_CATEGORY -> {
                     selectedCategoryImageUri = data?.data
                     Log.d("ImageDebug", "Image de catégorie sélectionnée: $selectedCategoryImageUri")
+                }
+                IMAGE_PICKER_REQUEST_PRODUCT -> {
+                    selectedProductImageUri = data?.data
+                    Log.d("ImageDebug", "Image de produit sélectionnée: $selectedProductImageUri")
                 }
             }
         }
@@ -177,13 +195,15 @@ class AddProductActivity : AppCompatActivity() {
         productName: String,
         productDescription: String,
         productPrice: String,
-        categoryName: String
+        categoryName: String,
+        productImageUrl: String
     ) {
         val product = hashMapOf(
             "name" to productName,
             "description" to productDescription,
             "price" to productPrice,
-            "category" to categoryName
+            "category" to categoryName,
+            "imageUrl" to productImageUrl
         )
 
         firestore.collection("products")
@@ -231,6 +251,7 @@ class AddProductActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val IMAGE_PICKER_REQUEST = 1
+        private const val IMAGE_PICKER_REQUEST_CATEGORY = 1
+        private const val IMAGE_PICKER_REQUEST_PRODUCT = 2
     }
 }
