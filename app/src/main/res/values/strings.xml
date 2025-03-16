@@ -11,6 +11,7 @@
     <string name="already_hav">Already have an account? Sign in</string>
     <string name="underlined_html"><![CDATA[<u>Categories</u>]]></string>
     <string name="produit_html"><![CDATA[<u>Produits</u>]]></string>
+    <string name="select_category_prompt">Sélectionnez une catégorie</string>
 </resources>
 
 

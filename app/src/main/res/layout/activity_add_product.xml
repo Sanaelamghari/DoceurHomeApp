@@ -1,4 +1,5 @@
 <!-- activity_add_product.xml -->
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -45,5 +46,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ajouter le produit" />
+    <!-- Champ pour le nom de la catégorie -->
+    <EditText
+        android:id="@+id/etCategoryName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Nom de la catégorie"
+        android:minHeight="48dp" />
+
+    <!-- Bouton pour sélectionner l'image principale -->
+    <Button
+        android:id="@+id/btnSelectCategoryImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sélectionner l'image de la catégorie"
+        android:layout_marginTop="8dp" />
+
+    <!-- Bouton pour ajouter une nouvelle catégorie -->
+    <Button
+        android:id="@+id/btnAddCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ajouter la catégorie"
+        android:layout_marginTop="8dp" />
+
+    <!-- Spinner (dropdown) pour afficher les catégories existantes -->
+    <Spinner
+        android:id="@+id/spinnerCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"
+        android:prompt="@string/select_category_prompt" />
 
 </LinearLayout>
