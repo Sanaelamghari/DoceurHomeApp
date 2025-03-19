@@ -38,9 +38,11 @@ class ProductsActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewProducts)
         recyclerView.layoutManager = GridLayoutManager(this, 2)
 
+        // Initialisation de l'adaptateur avec un clic sur l'image du produit
         productAdapter = ProductAdapter(productList,
             onAddToCartClick = { product -> addToCart(product) },
-            onFavoriteClick = { product -> addToFavorites(product) }
+            onFavoriteClick = { product -> addToFavorites(product) },
+            onProductImageClick = { product -> navigateToDetails(product) } // Nouveau callback pour le clic sur l'image
         )
 
         recyclerView.adapter = productAdapter
@@ -140,5 +142,13 @@ class ProductsActivity : AppCompatActivity() {
         cartIcon.text = cartCounter.toString()
         cartIcon.visibility = if (cartCounter > 0) View.VISIBLE else View.GONE
         Log.d("ProductsActivity", "🛒 Compteur panier mis à jour : $cartCounter")
+    }
+
+    // Fonction pour naviguer vers DetailsActivity
+    private fun navigateToDetails(product: Product) {
+        val intent = Intent(this, DetailsActivity::class.java).apply {
+            putExtra("PRODUCT_ID", product.id)
+        }
+        startActivity(intent)
     }
 }

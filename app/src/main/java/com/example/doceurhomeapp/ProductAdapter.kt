@@ -12,7 +12,8 @@ import com.bumptech.glide.Glide
 class ProductAdapter(
     private val productList: List<Product>,
     private val onAddToCartClick: (Product) -> Unit,
-    private val onFavoriteClick: (Product) -> Unit
+    private val onFavoriteClick: (Product) -> Unit,
+    private val onProductImageClick: (Product) -> Unit // Nouveau callback pour le clic sur l'image
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     inner class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -48,6 +49,11 @@ class ProductAdapter(
         // Gestion du clic sur l'icône de favori
         holder.favoriteIcon.setOnClickListener {
             onFavoriteClick(product)
+        }
+
+        // Gestion du clic sur l'image du produit
+        holder.productImage.setOnClickListener {
+            onProductImageClick(product)
         }
     }
 
