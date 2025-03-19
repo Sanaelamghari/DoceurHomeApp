@@ -12,6 +12,8 @@
     <string name="underlined_html"><![CDATA[<u>Categories</u>]]></string>
     <string name="produit_html"><![CDATA[<u>Produits</u>]]></string>
     <string name="select_category_prompt">Sélectionnez une catégorie</string>
+    <string name="todo1">TODO</string>
+    <string name="category_nameIt">Category Name</string>
 </resources>
 
 

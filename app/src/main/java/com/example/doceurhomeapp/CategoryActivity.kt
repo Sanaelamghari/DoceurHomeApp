@@ -2,28 +2,56 @@ package com.example.doceurhomeapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.FirebaseFirestore
 
 class CategoryActivity : AppCompatActivity() {
 
-    companion object {
-        const val CATEGORY_NAME = "CATEGORY_NAME"
-    }
+    // Variables pour les composants UI
+    private lateinit var rvCategories: RecyclerView
+    private lateinit var categoriesAdapter: CategoriesAdapter
+
+    // Référence à Firestore
+    private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
-        setupCategoryClick(R.id.category_image_1, R.id.category_title_1, "Category1")
-        setupCategoryClick(R.id.category_image_2, R.id.category_title_2, "Category2")
+        // Initialisation du RecyclerView
+        rvCategories = findViewById(R.id.rvCategories)
+        rvCategories.layoutManager = GridLayoutManager(this, 2) // 2 colonnes
+
+        // Initialisation de l'adaptateur
+        categoriesAdapter = CategoriesAdapter { categoryName ->
+            navigateToProducts(categoryName)
+        }
+        rvCategories.adapter = categoriesAdapter
+
+        // Charger les catégories depuis Firestore
+        loadCategories()
     }
 
-    // Fonction pour configurer les clics sur les catégories
-    private fun setupCategoryClick(imageId: Int, titleId: Int, categoryName: String) {
-        findViewById<ImageView>(imageId).setOnClickListener { navigateToProducts(categoryName) }
-        findViewById<TextView>(titleId).setOnClickListener { navigateToProducts(categoryName) }
+    // Charger les catégories depuis Firestore
+    private fun loadCategories() {
+        firestore.collection("categories")
+            .get()
+            .addOnSuccessListener { result ->
+                val categories = mutableListOf<Category>()
+                for (document in result) {
+                    val name = document.getString("name") ?: ""
+                    val imageUrl = document.getString("imageUrl") ?: ""
+                    categories.add(Category(name, imageUrl))
+                }
+                categoriesAdapter.submitList(categories)
+                Log.d("Firestore", "Catégories chargées: $categories")
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Erreur chargement catégories: ${e.message}")
+            }
     }
 
     // Fonction pour naviguer vers la page ProductsActivity avec la catégorie sélectionnée
@@ -32,9 +60,9 @@ class CategoryActivity : AppCompatActivity() {
             putExtra(CATEGORY_NAME, categoryName)
         }
         startActivity(intent)
-        finish() // Optionnel pour éviter d'empiler trop d'activités
+    }
+
+    companion object {
+        const val CATEGORY_NAME = "CATEGORY_NAME"
     }
 }
-
-
-
