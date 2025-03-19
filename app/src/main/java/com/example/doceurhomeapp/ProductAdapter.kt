@@ -1,7 +1,5 @@
 package com.example.doceurhomeapp
 
-import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-
 
 class ProductAdapter(
     private val productList: List<Product>,
@@ -35,8 +32,10 @@ class ProductAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = productList[position]
 
-        // Charger l'image avec Glide ou Picasso
-        Glide.with(holder.itemView.context).load(product.imageUrl).into(holder.productImage)
+        // Charger l'image avec Glide
+        Glide.with(holder.itemView.context)
+            .load(product.imageUrl)
+            .into(holder.productImage)
 
         holder.productName.text = product.name
         holder.productPrice.text = "${product.price} $"
@@ -54,4 +53,3 @@ class ProductAdapter(
 
     override fun getItemCount() = productList.size
 }
-

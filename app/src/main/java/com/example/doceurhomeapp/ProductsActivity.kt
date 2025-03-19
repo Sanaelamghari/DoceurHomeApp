@@ -3,6 +3,7 @@ package com.example.doceurhomeapp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -11,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import android.view.View
 
 class ProductsActivity : AppCompatActivity() {
 
@@ -21,10 +21,19 @@ class ProductsActivity : AppCompatActivity() {
     private val productList = mutableListOf<Product>()
 
     private var cartCounter = 0
+    private var selectedCategory: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_products2)
+
+        // Récupérer la catégorie sélectionnée depuis l'Intent
+        selectedCategory = intent.getStringExtra("CATEGORY_NAME")
+        if (selectedCategory == null) {
+            Toast.makeText(this, "Catégorie non trouvée", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
         recyclerView = findViewById(R.id.recyclerViewProducts)
         recyclerView.layoutManager = GridLayoutManager(this, 2)
@@ -47,10 +56,12 @@ class ProductsActivity : AppCompatActivity() {
 
     private fun addToFavorites(product: Product) {
         // Logique des favoris (peut être ajoutée plus tard)
+        Toast.makeText(this, "${product.name} ajouté aux favoris", Toast.LENGTH_SHORT).show()
     }
 
     private fun fetchProductsFromFirestore() {
         firestore.collection("products")
+            .whereEqualTo("category", selectedCategory) // Filtrer par catégorie
             .get()
             .addOnSuccessListener { documents ->
                 productList.clear()
@@ -131,8 +142,3 @@ class ProductsActivity : AppCompatActivity() {
         Log.d("ProductsActivity", "🛒 Compteur panier mis à jour : $cartCounter")
     }
 }
-
-
-
-
-

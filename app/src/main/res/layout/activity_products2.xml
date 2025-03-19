@@ -1,94 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProductsActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewProducts"
-        android:layout_width="416dp"
-        android:layout_height="713dp"
-        android:layout_marginTop="1dp"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
-
+    <!-- Barre de recherche -->
     <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="419dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="800dp"
+        android:id="@+id/linearLayout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            app:srcCompat="@drawable/search"/>
+
+        <EditText
+            android:id="@+id/editTextText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Search..."
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- Compteur de panier et icône du panier -->
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
         <TextView
             android:id="@+id/cartCounter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="330dp"
             android:text="0"
-            android:textSize="34sp"
-            android:textStyle="bold" />
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/cart"
-            android:layout_width="60dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/grona_store" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="413dp"
-        android:layout_height="43dp"
-        android:layout_marginBottom="736dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="40dp"
-
-            android:layout_marginLeft="60px"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/search" />
-
-        <EditText
-            android:id="@+id/editTextText"
-            android:layout_width="300dp"
-            android:layout_height="48dp"
-            android:layout_marginRight="40dp"
-
-            android:hint="Search..."
-            android:padding="12dp"
-            android:textSize="16sp" />
+            android:layout_marginStart="8dp"
+            app:srcCompat="@drawable/search"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="412dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="700dp"
-        android:orientation="horizontal"
+
+    <!-- RecyclerView pour afficher les produits -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewProducts"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"/>
-
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
