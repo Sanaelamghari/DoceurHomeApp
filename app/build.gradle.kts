@@ -49,7 +49,9 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.9.3") // Pour uploader les images
     //implementation("androidx.core:core-ktx:1.15.0")
     implementation ("androidx.core:core-ktx:1.12.0")
-
+    implementation ("androidx.recyclerview:recyclerview:1.3.1")
+    implementation ("androidx.viewpager2:viewpager2:1.0.0")
+    implementation ("com.google.android.material:material:1.9.0")
 
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")

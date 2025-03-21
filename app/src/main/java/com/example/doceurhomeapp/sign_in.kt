@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.doceurhomeapp.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
 
-class sign_inActivity : AppCompatActivity() {
+class sign_in : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignInBinding
     private lateinit var auth: FirebaseAuth

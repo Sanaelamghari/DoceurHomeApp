@@ -15,8 +15,8 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="68dp"
+            android:layout_width="419dp"
+            android:layout_height="46dp"
             android:layout_gravity="bottom"
             android:layout_margin="0dp"
             android:padding="0dp"
@@ -29,63 +29,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/menu" />
 
-        <FrameLayout
-            android:id="@+id/frameLayout2"
-            android:layout_width="410dp"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
             android:layout_height="450dp"
             android:layout_marginBottom="340dp"
             app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.076">
+            app:layout_constraintVertical_bias="0.076"/>
 
-            <ImageView
-                android:id="@+id/imageView35"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:scrollbarSize="8dp"
-                app:srcCompat="@drawable/image" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="66dp"
-                android:layout_marginTop="40dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="13dp"
-                    android:layout_weight="1"
-                    android:fontFamily="serif"
-                    android:gravity="center"
-                    android:text="Doceur Home Wear"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/cart_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:onClick="authentifier"
-                    app:srcCompat="@drawable/store" />
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imageView42"
-                android:layout_width="82dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="180dp"
-                android:layout_marginTop="400dp"
-                android:scrollbarSize="8dp"
-                app:srcCompat="@drawable/baseline_more_horiz_24" />
-
-        </FrameLayout>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="400dp"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/viewPager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/textView24"
@@ -194,7 +157,8 @@
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView24"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout2" />
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout2"
+            tools:ignore="UnknownId" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

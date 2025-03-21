@@ -21,7 +21,7 @@ class connectActivity : AppCompatActivity() {
     // Fonction appelée lors du clic sur le bouton "Sign in"
     fun sign_in(view: View) {
         // Créer un Intent pour passer à sign_inActivity
-        val intent = Intent(this,sign_inActivity::class.java)
+        val intent = Intent(this,sign_in::class.java)
         startActivity(intent) // Démarrer l'activité sign_inActivity
     }
 }
