@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 class ProductAdapter(
-    private val productList: List<Product>,
+    private var productList: List<Product>, // Changé en var
     private val onAddToCartClick: (Product) -> Unit,
     private val onFavoriteClick: (Product) -> Unit,
     private val onProductImageClick: (Product) -> Unit // Nouveau callback pour le clic sur l'image
@@ -58,4 +58,8 @@ class ProductAdapter(
     }
 
     override fun getItemCount() = productList.size
+    fun updateList(newList: List<Product>) {
+        productList = newList
+        notifyDataSetChanged()
+    }
 }

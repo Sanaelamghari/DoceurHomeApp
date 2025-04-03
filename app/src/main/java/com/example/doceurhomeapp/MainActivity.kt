@@ -61,9 +61,14 @@ class MainActivity : AppCompatActivity() {
 
         // Liste des images à afficher dans le slider
         val images = listOf(
-            R.drawable.produit1,
-            R.drawable.image,
-            R.drawable.detail
+            R.drawable.tab3,
+            R.drawable.tab45,
+            R.drawable.tb71,
+            R.drawable.tb73,
+            R.drawable.vig,
+            R.drawable.riche,
+            R.drawable.tab52
+
         )
 
         // Adapter pour le ViewPager2
@@ -128,7 +133,7 @@ class MainActivity : AppCompatActivity() {
     class ImageSliderAdapter(private val images: List<Int>) : RecyclerView.Adapter<ImageSliderAdapter.ImageViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_slider_image, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_image_slider, parent, false)
             return ImageViewHolder(view)
         }
 
@@ -146,4 +151,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    fun onSeeMoreClicked(view: View) {
+        val intent = Intent(this, Bestsellers::class.java)
+        startActivity(intent)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+    }
+
 }

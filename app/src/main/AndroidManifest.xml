@@ -17,8 +17,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoceurHomeApp"
         tools:targetApi="31">
+
+        <!-- Métadonnées OBLIGATOIRES pour Firebase -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- Seulement si vous utilisez Firebase Auth -->
+        <meta-data
+            android:name="firebase_auth_emulator_host"
+            android:value="10.0.2.2:9099"
+            tools:ignore="MissingFirebaseInstanceToken" />
+
+
+
         <activity
-            android:name=".bestellerActivity"
+            android:name=".Bestsellers"
             android:exported="false" />
         <activity
             android:name=".MycartActivity"
@@ -39,16 +53,13 @@
             android:name=".CategoryActivity"
             android:exported="false" />
         <activity
-            android:name=".MycartActivity2"
-            android:exported="false" />
-        <activity
             android:name=".DetailsActivity"
             android:exported="false" />
         <activity
             android:name=".SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".sign_inActivity"
+            android:name=".sign_in"
             android:exported="false" />
         <activity
             android:name=".connectActivity"

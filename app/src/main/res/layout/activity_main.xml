@@ -7,8 +7,6 @@
     tools:context=".MainActivity">
 
     <!-- Contenu principal -->
-
-    <!-- Bottom Navigation -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -31,14 +29,18 @@
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="450dp"
+            android:layout_width="416dp"
+            android:layout_height="440dp"
             android:layout_marginBottom="340dp"
+            android:background="@drawable/rounded_bottom_right"
+            android:clipToOutline="true"
+            android:elevation="4dp"
             app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.076"/>
+            app:layout_constraintVertical_bias="0.0"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
@@ -50,115 +52,163 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TextView
-            android:id="@+id/textView24"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="304dp"
-            android:layout_marginBottom="287dp"
-            android:text="@string/bestseller"
-            android:textColor="#612A2A"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout2" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="404dp"
-            android:layout_height="261dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="4dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView24">
-
-            <FrameLayout
-                android:layout_width="185dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="15dp">
-
-                <ImageView
-                    android:id="@+id/imageView38"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/produit1" />
-
-                <TextView
-                    android:id="@+id/textView25"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="7dp"
-                    android:layout_marginTop="7dp"
-                    android:text="@string/buy"
-                    android:textColor="#612222"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/imageView40"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="150dp"
-                    android:layout_marginTop="13dp"
-                    app:srcCompat="@drawable/favorite" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="198dp"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/imageView39"
-                    android:layout_width="match_parent"
-                    android:layout_height="275dp"
-                    android:layout_marginTop="8dp"
-                    app:srcCompat="@drawable/xm32" />
-
-                <TextView
-                    android:id="@+id/buy_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="9dp"
-                    android:onClick="authentifier"
-                    android:text="@string/buy"
-                    android:textColor="#613131"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/imageView41"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="153dp"
-                    android:layout_marginTop="10dp"
-                    app:srcCompat="@drawable/favorite" />
-            </FrameLayout>
-        </LinearLayout>
+        <!-- Horizontal ScrollView pour les bestsellers -->
 
         <TextView
             android:id="@+id/see_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="221dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="17dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="28dp"
+            android:onClick="onSeeMoreClicked"
             android:text="see more"
             android:textColor="#8F5454"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView24"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout2"
             tools:ignore="UnknownId" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="261dp"
+            android:layout_marginBottom="20dp"
+            android:fillViewport="true"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <!-- Premier produit -->
+                <FrameLayout
+                    android:layout_width="185dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="8dp">
+
+                    <ImageView
+                        android:id="@+id/imageView38"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@drawable/produit1" />
+
+                    <TextView
+                        android:id="@+id/textView25"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="7dp"
+
+                        android:padding="4dp"
+                        android:text="@string/buy"
+                        android:textColor="#612222"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/imageView40"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="150dp"
+                        android:layout_marginTop="13dp"
+                        app:srcCompat="@drawable/plenne" />
+                </FrameLayout>
+
+                <!-- Deuxième produit -->
+                <FrameLayout
+                    android:layout_width="185dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="8dp">
+
+                    <ImageView
+                        android:id="@+id/imageView39"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@drawable/xm32" />
+
+                    <TextView
+                        android:id="@+id/buy_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="7dp"
+
+                        android:padding="4dp"
+                        android:text="@string/buy"
+                        android:textColor="#613131"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/imageView41"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="150dp"
+                        android:layout_marginTop="13dp"
+                        app:srcCompat="@drawable/plenne" />
+                </FrameLayout>
+
+                <!-- Troisième produit (exemple supplémentaire) -->
+                <FrameLayout
+                    android:layout_width="185dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="16dp">
+
+                    <ImageView
+                        android:id="@+id/imageView42"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@drawable/image" />
+
+                    <TextView
+                        android:id="@+id/buy_text2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="7dp"
+
+                        android:padding="4dp"
+                        android:text="@string/buy"
+                        android:textColor="#613131"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/imageView43"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="150dp"
+                        android:layout_marginTop="13dp"
+                        app:srcCompat="@drawable/plenne" />
+                </FrameLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="244dp"
+            android:layout_marginBottom="17dp"
+            android:fontFamily="sans-serif"
+            android:text="Bestseller"
+            android:textColor="#512828"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
+            app:layout_constraintEnd_toStartOf="@+id/see_more"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewPager" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

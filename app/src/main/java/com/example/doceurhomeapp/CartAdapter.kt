@@ -37,7 +37,7 @@ class CartAdapter(
         holder.productPrice.text = "${item.price} $"
         Glide.with(holder.itemView.context)
             .load(item.imageUrl)
-            .placeholder(R.drawable.favorite)
+            .placeholder(R.drawable.plenne)
             .error(R.drawable.person)
             .into(holder.productImage)
 

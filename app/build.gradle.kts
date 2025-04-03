@@ -44,47 +44,47 @@ android {
     }
 }
 
-dependencies {
-    implementation("androidx.customview:customview-poolingcontainer:1.0.0")
-    implementation ("com.squareup.okhttp3:okhttp:4.9.3") // Pour uploader les images
-    //implementation("androidx.core:core-ktx:1.15.0")
-    implementation ("androidx.core:core-ktx:1.12.0")
-    implementation ("androidx.recyclerview:recyclerview:1.3.1")
-    implementation ("androidx.viewpager2:viewpager2:1.0.0")
-    implementation ("com.google.android.material:material:1.9.0")
+    dependencies {
+        // AndroidX Core
+        implementation ("androidx.core:core-ktx:1.12.0")
+        implementation ("androidx.appcompat:appcompat:1.6.1")
 
-    implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
-    implementation("androidx.gridlayout:gridlayout:1.0.0")
+        // UI Components
+        implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+        implementation ("androidx.recyclerview:recyclerview:1.3.1")
+        implementation ("androidx.viewpager2:viewpager2:1.0.0")
+        implementation ("androidx.gridlayout:gridlayout:1.0.0")
+        implementation ("androidx.fragment:fragment-ktx:1.6.2")
+        implementation ("androidx.customview:customview-poolingcontainer:1.0.0")
 
-    // 🔥 Utilisation du Firebase BoM (gère les versions automatiquement)
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
-    implementation ("com.google.firebase:firebase-storage-ktx")
-    implementation ("com.google.firebase:firebase-firestore-ktx")
-    implementation ("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-appcheck-playintegrity") // 🔥 Corrige l'erreur de classe manquante
+        // Material Design (une seule déclaration)
+        implementation ("com.google.android.material:material:1.9.0")
 
-    // RecyclerView
-    implementation ("androidx.recyclerview:recyclerview:1.3.1")
-    implementation ("androidx.fragment:fragment:1.5.7")
-    implementation("androidx.fragment:fragment-ktx:1.6.2")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.firebase:firebase-appcheck-playintegrity")
-    implementation("com.google.firebase:firebase-appcheck-ktx")
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.appcompat:appcompat:1.6.0")
+        // Firebase (avec BOM)
+        implementation (platform("com.google.firebase:firebase-bom:32.7.0"))
+        implementation ("com.google.firebase:firebase-auth-ktx")
+        implementation ("com.google.firebase:firebase-firestore-ktx")
+        implementation ("com.google.firebase:firebase-storage-ktx")
+        implementation ("com.google.firebase:firebase-appcheck-playintegrity")
+        implementation ("com.google.firebase:firebase-appcheck-ktx")
 
-    // Glide (pour charger les images)
-    implementation ("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+        // Google Play Services
+        implementation ("com.google.android.gms:play-services-auth:20.7.0")
+        implementation ("com.google.android.gms:play-services-base:18.2.0")
 
-    // Room (Base de données locale)
-    implementation("androidx.room:room-runtime:2.5.2")
+        // HTTP Client
+        implementation ("com.squareup.okhttp3:okhttp:4.9.3")
 
-    // Tests
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-}
+        // Image Loading
+        implementation ("com.github.bumptech.glide:glide:4.16.0")
+        annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
+        // Database
+        implementation ("androidx.room:room-runtime:2.5.2")
+        annotationProcessor ("androidx.room:room-compiler:2.5.2")
+
+        // Testing
+        testImplementation ("junit:junit:4.13.2")
+        androidTestImplementation ("androidx.test.ext:junit:1.1.5")
+        androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
+    }

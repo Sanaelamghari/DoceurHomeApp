@@ -9,20 +9,21 @@ class connectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_connect)
+
+        // Ajouter ceci pour empêcher le retour automatique à MainActivity
+        supportActionBar?.hide()
     }
 
-    // Fonction appelée lors du clic sur le bouton "Sign up"
     fun sign_up(view: View) {
-        // Créer un Intent pour passer à SignupActivity
         val intent = Intent(this, SignupActivity::class.java)
-        startActivity(intent) // Démarrer l'activité SignupActivity
+        startActivity(intent)
+        finish() // Fermer cette activité pour éviter le retour
     }
 
-    // Fonction appelée lors du clic sur le bouton "Sign in"
     fun sign_in(view: View) {
-        // Créer un Intent pour passer à sign_inActivity
-        val intent = Intent(this,sign_in::class.java)
-        startActivity(intent) // Démarrer l'activité sign_inActivity
+        val intent = Intent(this, sign_in::class.java)
+        startActivity(intent)
+        finish() // Fermer cette activité pour éviter le retour
     }
 }
 

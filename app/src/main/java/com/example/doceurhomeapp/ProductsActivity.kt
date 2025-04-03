@@ -2,8 +2,11 @@ package com.example.doceurhomeapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -17,8 +20,10 @@ class ProductsActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var productAdapter: ProductAdapter
+    private lateinit var searchEditText: EditText
     private val firestore = FirebaseFirestore.getInstance()
     private val productList = mutableListOf<Product>()
+    private val filteredProductList = mutableListOf<Product>()
 
     private var cartCounter = 0
     private var selectedCategory: String? = null
@@ -26,6 +31,10 @@ class ProductsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_products2)
+
+        // Initialisation de la recherche
+        searchEditText = findViewById(R.id.cherche)
+        setupSearch()
 
         // Récupérer la catégorie sélectionnée depuis l'Intent
         selectedCategory = intent.getStringExtra("CATEGORY_NAME")
@@ -38,11 +47,11 @@ class ProductsActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewProducts)
         recyclerView.layoutManager = GridLayoutManager(this, 2)
 
-        // Initialisation de l'adaptateur avec un clic sur l'image du produit
+        // Initialisation de l'adaptateur avec la liste complète
         productAdapter = ProductAdapter(productList,
             onAddToCartClick = { product -> addToCart(product) },
             onFavoriteClick = { product -> addToFavorites(product) },
-            onProductImageClick = { product -> navigateToDetails(product) } // Nouveau callback pour le clic sur l'image
+            onProductImageClick = { product -> navigateToDetails(product) }
         )
 
         recyclerView.adapter = productAdapter
@@ -56,14 +65,42 @@ class ProductsActivity : AppCompatActivity() {
         fetchCartCount()
     }
 
+    private fun setupSearch() {
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                filterProducts(s?.toString() ?: "")
+            }
+        })
+    }
+
+    private fun filterProducts(query: String) {
+        filteredProductList.clear()
+
+        if (query.isEmpty()) {
+            // Si la recherche est vide, afficher tous les produits
+            filteredProductList.addAll(productList)
+        } else {
+            // Filtrer les produits dont le nom contient la requête (insensible à la casse)
+            for (product in productList) {
+                if (product.name.contains(query, ignoreCase = true)) {
+                    filteredProductList.add(product)
+                }
+            }
+        }
+
+        // Mettre à jour l'adaptateur avec la liste filtrée
+        productAdapter.updateList(filteredProductList)
+    }
+
     private fun addToFavorites(product: Product) {
-        // Logique des favoris (peut être ajoutée plus tard)
         Toast.makeText(this, "${product.name} ajouté aux favoris", Toast.LENGTH_SHORT).show()
     }
 
     private fun fetchProductsFromFirestore() {
         firestore.collection("products")
-            .whereEqualTo("category", selectedCategory) // Filtrer par catégorie
+            .whereEqualTo("category", selectedCategory)
             .get()
             .addOnSuccessListener { documents ->
                 productList.clear()
@@ -71,12 +108,14 @@ class ProductsActivity : AppCompatActivity() {
                     val product = document.toObject(Product::class.java).copy(id = document.id)
                     productList.add(product)
                 }
+                // Initialiser la liste filtrée avec tous les produits
+                filteredProductList.addAll(productList)
                 productAdapter.notifyDataSetChanged()
-                Log.d("ProductsActivity", "✅ Produits chargés avec succès : ${productList.size}")
+                Log.d("ProductsActivity", "Produits chargés: ${productList.size}")
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Erreur de chargement", Toast.LENGTH_SHORT).show()
-                Log.e("ProductsActivity", "❌ Erreur lors du chargement des produits", it)
+                Log.e("ProductsActivity", "Erreur chargement produits", it)
             }
     }
 
@@ -91,7 +130,7 @@ class ProductsActivity : AppCompatActivity() {
                 updateCartCounter()
             }
         }.addOnFailureListener {
-            Log.e("ProductsActivity", "❌ Erreur chargement du panier", it)
+            Log.e("ProductsActivity", "Erreur chargement panier", it)
         }
     }
 
@@ -123,17 +162,23 @@ class ProductsActivity : AppCompatActivity() {
             }
 
             cartRef.set(mapOf("products" to cartItems.map {
-                mapOf("id" to it.id, "name" to it.name, "price" to it.price, "imageUrl" to it.imageUrl, "quantity" to it.quantity)
+                mapOf(
+                    "id" to it.id,
+                    "name" to it.name,
+                    "price" to it.price,
+                    "imageUrl" to it.imageUrl,
+                    "quantity" to it.quantity
+                )
             })).addOnSuccessListener {
                 cartCounter++
                 updateCartCounter()
                 Toast.makeText(this, "${product.name} ajouté au panier", Toast.LENGTH_SHORT).show()
-                Log.d("ProductsActivity", "✅ Produit ajouté avec succès : ${product.name}")
+                Log.d("ProductsActivity", "Produit ajouté: ${product.name}")
             }.addOnFailureListener {
-                Log.e("ProductsActivity", "❌ Malheureusement !!!", it)
+                Log.e("ProductsActivity", "Erreur ajout panier", it)
             }
         }.addOnFailureListener {
-            Log.e("ProductsActivity", "❌ Erreur lors de la récupération du panier", it)
+            Log.e("ProductsActivity", "Erreur récupération panier", it)
         }
     }
 
@@ -141,10 +186,9 @@ class ProductsActivity : AppCompatActivity() {
         val cartIcon = findViewById<TextView>(R.id.cartCounter)
         cartIcon.text = cartCounter.toString()
         cartIcon.visibility = if (cartCounter > 0) View.VISIBLE else View.GONE
-        Log.d("ProductsActivity", "🛒 Compteur panier mis à jour : $cartCounter")
+        Log.d("ProductsActivity", "Compteur panier: $cartCounter")
     }
 
-    // Fonction pour naviguer vers DetailsActivity
     private fun navigateToDetails(product: Product) {
         val intent = Intent(this, DetailsActivity::class.java).apply {
             putExtra("PRODUCT_ID", product.id)
