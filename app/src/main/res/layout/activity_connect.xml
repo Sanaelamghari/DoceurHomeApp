@@ -54,5 +54,20 @@
             android:text="@string/sign_in"
             android:textSize="40sp"
             android:textStyle="bold" />
+
+        <!-- Ajoutez ces boutons -->
+        <Button
+            android:id="@+id/btnManagement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Management"
+            android:onClick="management"/>
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:onClick="logout"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

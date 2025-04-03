@@ -17,19 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoceurHomeApp"
         tools:targetApi="31">
-
+        <activity
+            android:name=".Favorites"
+            android:exported="false" />
         <!-- Métadonnées OBLIGATOIRES pour Firebase -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-        <!-- Seulement si vous utilisez Firebase Auth -->
+            android:value="@integer/google_play_services_version" /> <!-- Seulement si vous utilisez Firebase Auth -->
         <meta-data
             android:name="firebase_auth_emulator_host"
             android:value="10.0.2.2:9099"
             tools:ignore="MissingFirebaseInstanceToken" />
-
-
 
         <activity
             android:name=".Bestsellers"
