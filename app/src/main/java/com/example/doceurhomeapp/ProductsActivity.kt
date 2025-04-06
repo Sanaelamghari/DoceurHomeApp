@@ -1,5 +1,4 @@
 package com.example.doceurhomeapp
-
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -15,6 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.concurrent.ExecutionException
+
 
 class ProductsActivity : AppCompatActivity() {
 
@@ -24,6 +25,7 @@ class ProductsActivity : AppCompatActivity() {
     private val firestore = FirebaseFirestore.getInstance()
     private val productList = mutableListOf<Product>()
     private val filteredProductList = mutableListOf<Product>()
+    private val auth = FirebaseAuth.getInstance()
 
     private var cartCounter = 0
     private var selectedCategory: String? = null
@@ -50,10 +52,8 @@ class ProductsActivity : AppCompatActivity() {
         // Initialisation de l'adaptateur avec la liste complète
         productAdapter = ProductAdapter(productList,
             onAddToCartClick = { product -> addToCart(product) },
-            onFavoriteClick = { product -> addToFavorites(product) },
             onProductImageClick = { product -> navigateToDetails(product) }
         )
-
         recyclerView.adapter = productAdapter
 
         val cartIcon = findViewById<ImageView>(R.id.cart)
@@ -61,8 +61,23 @@ class ProductsActivity : AppCompatActivity() {
             startActivity(Intent(this, MycartActivity::class.java))
         }
 
+
+        FirebaseAuth.getInstance().addAuthStateListener {
+            try {
+                // appel à la méthode problématique
+                refreshFavorites()
+            } catch (e: ExecutionException) {
+                Log.w("BluetoothStats", "Impossible d'accéder à BluetoothActivityEnergyInfo", e)
+            } catch (e: RuntimeException) {
+                Log.w("BluetoothStats", "Impossible d'accéder à BluetoothActivityEnergyInfo", e)
+            }
+
+
+        }
+
         fetchProductsFromFirestore()
         fetchCartCount()
+
     }
 
     private fun setupSearch() {
@@ -94,30 +109,76 @@ class ProductsActivity : AppCompatActivity() {
         productAdapter.updateList(filteredProductList)
     }
 
-    private fun addToFavorites(product: Product) {
-        Toast.makeText(this, "${product.name} ajouté aux favoris", Toast.LENGTH_SHORT).show()
-    }
-
     private fun fetchProductsFromFirestore() {
         firestore.collection("products")
             .whereEqualTo("category", selectedCategory)
             .get()
             .addOnSuccessListener { documents ->
                 productList.clear()
-                for (document in documents) {
-                    val product = document.toObject(Product::class.java).copy(id = document.id)
-                    productList.add(product)
+                documents.forEach { document ->
+                    try {
+                        // Méthode 1: Conversion manuelle
+                        val data = document.data
+                        val product = Product(
+                            id = document.id,
+                            name = data["name"]?.toString() ?: "",
+                            price = when (val price = data["price"]) {
+                                is Double -> price
+                                is Long -> price.toDouble()
+                                is String -> price.toDoubleOrNull() ?: 0.0
+                                else -> 0.0
+                            },
+                            imageUrl = data["imageUrl"]?.toString() ?: "",
+                            category = data["category"]?.toString() ?: "",
+                            isFavorite = false
+                        )
+                        productList.add(product)
+                    } catch (e: Exception) {
+                        Log.e("ProductsActivity", "Error parsing product ${document.id}", e)
+                    }
                 }
-                // Initialiser la liste filtrée avec tous les produits
+                filteredProductList.clear()
                 filteredProductList.addAll(productList)
                 productAdapter.notifyDataSetChanged()
-                Log.d("ProductsActivity", "Produits chargés: ${productList.size}")
+                loadInitialFavorites()
             }
-            .addOnFailureListener {
+            .addOnFailureListener { e ->
                 Toast.makeText(this, "Erreur de chargement", Toast.LENGTH_SHORT).show()
-                Log.e("ProductsActivity", "Erreur chargement produits", it)
+                Log.e("ProductsActivity", "Load error", e)
+            }
+
+    }
+
+    // Modifier loadInitialFavorites():
+    private fun loadInitialFavorites() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        firestore.collection("userFavorites")
+            .document(userId)
+            .collection("products")
+            .get()
+            .addOnSuccessListener { documents ->
+                val favoriteIds = documents.map { it.id }.toSet()
+                productList.forEach { product ->
+                    product.isFavorite = favoriteIds.contains(product.id)
+                }
+                runOnUiThread {
+                    productAdapter.notifyDataSetChanged()
+                }
             }
     }
+
+    // Ajoutez cette méthode :
+    private fun refreshFavorites() {
+        if (auth.currentUser != null) {
+            loadInitialFavorites()
+        } else {
+            productList.forEach { it.isFavorite = false }
+            productAdapter.notifyDataSetChanged()
+        }
+    }
+
+
 
     private fun fetchCartCount() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -195,4 +256,8 @@ class ProductsActivity : AppCompatActivity() {
         }
         startActivity(intent)
     }
+
+
+
+
 }

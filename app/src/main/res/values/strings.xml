@@ -1,8 +1,13 @@
 <resources>
+    <string name="product_image">Image du produit</string>
+    <string name="no_favorites">You dont have any favorites yet</string>
+    <string name="favorite_icon">Add to favorites</string>
     <string name="app_name">DouceurHomeApp</string>
     <string name="douceur_home">DouceurHomeWare</string>
     <string name="bestseller">Bestseller</string>
     <string name="buy">Buy</string>
+    <string name="remove_favorite">Retirer des favoris</string>
+
     <string name="docoeur_hom">Docoeur\nHomewear</string>
     <string name="douceur_homewear">Douceur\nHomewear</string>
     <string name="sign_up">Sign up</string>
@@ -19,6 +24,19 @@
     <string name="favorite_icon_desc">Ajouter aux favoris</string>
     <string name="add_to_cart_desc">Ajouter au panier</string>
     <string name="search_hint" />
+    <string name="login_required">Connectez-vous pour voir vos favoris</string>
+
+    <string name="load_error">Erreur de chargement</string>
+    <string name="remove_favorite_title">Retirer des favoris</string>
+    <string name="remove_favorite_message">Retirer %s de vos favoris?</string>
+    <string name="remove">Retirer</string>
+    <string name="cancel">Annuler</string>
+    <string name="remove_failed">Échec de la suppression</string>
+    <string name="price_format">%.2f €</string>
+    <string name="explorer_les_produits">Explorer les produits</string>
+    <string name="aucun_favori_trouv">Aucun favori trouvé</string>
+
+
 </resources>
 
 

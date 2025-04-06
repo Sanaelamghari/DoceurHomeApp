@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_profile -> {
                     // Redirige vers AddProductActivity
-                    navigateTo(AddProductActivity::class.java)
+                    navigateTo(Favorites::class.java)
                     true
                 }
                 else -> false

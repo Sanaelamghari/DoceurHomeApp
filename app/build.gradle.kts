@@ -60,6 +60,16 @@ android {
         // Material Design (une seule déclaration)
         implementation ("com.google.android.material:material:1.9.0")
 
+        implementation ("com.google.firebase:firebase-firestore:24.10.0")
+        implementation ("com.google.firebase:firebase-auth:22.3.0")
+        implementation ("com.google.android.gms:play-services-auth:20.7.0")
+        implementation ("com.github.bumptech.glide:glide:4.16.0")
+        implementation ("com.google.firebase:firebase-firestore:24.10.0")
+        implementation ("androidx.core:core-ktx:1.7.0")
+
+        implementation ("com.google.firebase:firebase-firestore-ktx:24.9.1")
+        implementation ("com.google.firebase:firebase-auth-ktx:22.3.0")
+
         // Firebase (avec BOM)
         implementation ("com.google.firebase:firebase-auth:21.0.1")
         implementation ("com.google.firebase:firebase-firestore:24.0.0")

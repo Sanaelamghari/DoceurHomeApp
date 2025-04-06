@@ -1,10 +1,10 @@
 package com.example.doceurhomeapp
 
 data class Product(
-    val id: String = "",
+    var id: String = "",
     val name: String = "",
     val description: String = "",
-    val price: String = "",
+    val price: Double = 0.0,
     val imageUrl: String = "",
     val category: String = "",// Ajout du champ category pour le filtrage
     var isFavorite: Boolean = false,
