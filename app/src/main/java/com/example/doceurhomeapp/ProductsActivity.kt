@@ -1,5 +1,6 @@
 package com.example.doceurhomeapp
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -39,47 +40,66 @@ class ProductsActivity : AppCompatActivity() {
         setupSearch()
 
         // Récupérer la catégorie sélectionnée depuis l'Intent
-        selectedCategory = intent.getStringExtra("CATEGORY_NAME")
-        if (selectedCategory == null) {
+        selectedCategory = intent.getStringExtra("CATEGORY_NAME") ?: run {
             Toast.makeText(this, "Catégorie non trouvée", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
+        // Initialisation du RecyclerView avec GridLayoutManager
         recyclerView = findViewById(R.id.recyclerViewProducts)
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        recyclerView.layoutManager = gridLayoutManager
 
-        // Initialisation de l'adaptateur avec la liste complète
-        productAdapter = ProductAdapter(productList,
+        // Configuration du décalage vertical entre les colonnes
+        recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                val position = parent.getChildAdapterPosition(view)
+                val spacing = resources.getDimensionPixelSize(R.dimen.grid_spacing)
+
+                // Appliquer un décalage pour les éléments de la colonne de droite (positions impaires)
+                if (position % 2 == 1) {
+                    outRect.top = resources.getDimensionPixelSize(R.dimen.grid_offset)
+                }
+
+                // Espacement standard
+                outRect.left = spacing / 2
+                outRect.right = spacing / 2
+                outRect.bottom = spacing
+            }
+        })
+
+        // Padding pour le RecyclerView
+        recyclerView.setPadding(0, resources.getDimensionPixelSize(R.dimen.grid_top_padding), 0, 0)
+        recyclerView.clipToPadding = false
+
+        // Initialisation de l'adaptateur
+        productAdapter = ProductAdapter(
+            productList,
             onAddToCartClick = { product -> addToCart(product) },
             onProductImageClick = { product -> navigateToDetails(product) }
         )
         recyclerView.adapter = productAdapter
 
-        val cartIcon = findViewById<ImageView>(R.id.cart)
-        cartIcon.setOnClickListener {
+        // Gestion du clic sur l'icône panier
+        findViewById<ImageView>(R.id.cart).setOnClickListener {
             startActivity(Intent(this, MycartActivity::class.java))
         }
 
-
+        // Écouteur d'état d'authentification
         FirebaseAuth.getInstance().addAuthStateListener {
             try {
-                // appel à la méthode problématique
                 refreshFavorites()
             } catch (e: ExecutionException) {
                 Log.w("BluetoothStats", "Impossible d'accéder à BluetoothActivityEnergyInfo", e)
             } catch (e: RuntimeException) {
                 Log.w("BluetoothStats", "Impossible d'accéder à BluetoothActivityEnergyInfo", e)
             }
-
-
         }
 
         fetchProductsFromFirestore()
         fetchCartCount()
-
     }
-
     private fun setupSearch() {
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -256,6 +276,8 @@ class ProductsActivity : AppCompatActivity() {
         }
         startActivity(intent)
     }
+
+
 
 
 

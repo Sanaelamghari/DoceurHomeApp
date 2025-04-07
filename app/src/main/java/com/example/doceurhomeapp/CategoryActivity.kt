@@ -1,5 +1,6 @@
 package com.example.doceurhomeapp
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
@@ -28,7 +29,46 @@ class CategoryActivity : AppCompatActivity() {
 
         setupRecyclerView()
         setupSearch()
+        setupBottomNavigation() // Ajout de la configuration de la navigation
         loadCategories()
+    }
+    private fun setupBottomNavigation() {
+        binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_home -> {
+                    navigateTo(MainActivity::class.java)
+                    finish()
+                    true
+                }
+                R.id.nav_list -> {
+                    // Déjà sur la page des catégories
+                    true
+                }
+                R.id.nav_cart -> {
+                    navigateTo(MycartActivity::class.java)
+                    finish()
+                    true
+                }
+                R.id.nav_profile -> {
+                    navigateTo(Favorites::class.java)
+                    finish()
+                    true
+                }
+                else -> false
+            }.also { result ->
+                if (result) overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
+        }
+
+        // Marquer l'item actif
+        binding.bottomNavigation.selectedItemId = R.id.nav_list
+    }
+
+    private fun <T : Activity> navigateTo(activityClass: Class<T>) {
+        val intent = Intent(this, activityClass).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+        startActivity(intent)
     }
 
     private fun setupRecyclerView() {
@@ -39,7 +79,27 @@ class CategoryActivity : AppCompatActivity() {
         binding.rvCategories.apply {
             layoutManager = GridLayoutManager(this@CategoryActivity, 2) // 2 colonnes
             adapter = categoriesAdapter
-            addItemDecoration(GridSpacingItemDecoration(2, 16, true))
+            // Ajout du padding top pour la première colonne
+            setPadding(0, resources.getDimensionPixelSize(R.dimen.grid_top_padding), 0, 0)
+            clipToPadding = false
+
+            // Remplacement de GridSpacingItemDecoration par notre nouveau ItemDecoration
+            addItemDecoration(object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                    val position = parent.getChildAdapterPosition(view)
+                    val spacing = resources.getDimensionPixelSize(R.dimen.grid_spacing)
+
+                    // Appliquer un margin différent pour les éléments de la colonne de droite
+                    if (position % 2 == 1) { // éléments impairs (colonne de droite)
+                        outRect.top = resources.getDimensionPixelSize(R.dimen.grid_offset) // décalage vertical
+                    }
+
+                    // Espacement horizontal et vertical de base
+                    outRect.left = spacing / 2
+                    outRect.right = spacing / 2
+                    outRect.bottom = spacing
+                }
+            })
         }
     }
 
@@ -52,19 +112,11 @@ class CategoryActivity : AppCompatActivity() {
                 filterCategories(s.toString())
             }
         })
-
-        binding.allCategoriesChip.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                binding.searchInput.text?.clear()
-                categoriesAdapter.submitList(allCategories)
-            }
-        }
     }
 
     private fun filterCategories(query: String) {
         if (query.isEmpty()) {
             categoriesAdapter.submitList(allCategories)
-            binding.allCategoriesChip.isChecked = true
             return
         }
 
@@ -79,8 +131,6 @@ class CategoryActivity : AppCompatActivity() {
     }
 
     private fun loadCategories() {
-        binding.progressBar.visibility = View.VISIBLE
-
         firestore.collection("categories")
             .get()
             .addOnSuccessListener { result ->
@@ -91,7 +141,6 @@ class CategoryActivity : AppCompatActivity() {
                     )
                 }
                 categoriesAdapter.submitList(allCategories)
-                binding.progressBar.visibility = View.GONE
             }
             .addOnFailureListener { e ->
                 Toast.makeText(
@@ -99,7 +148,6 @@ class CategoryActivity : AppCompatActivity() {
                     "Erreur de chargement: ${e.localizedMessage}",
                     Toast.LENGTH_LONG
                 ).show()
-                binding.progressBar.visibility = View.GONE
             }
     }
 
@@ -113,34 +161,5 @@ class CategoryActivity : AppCompatActivity() {
 
     companion object {
         const val CATEGORY_NAME = "CATEGORY_NAME"
-    }
-}
-
-// Extension pour l'espacement entre les items
-class GridSpacingItemDecoration(
-    private val spanCount: Int,
-    private val spacing: Int,
-    private val includeEdge: Boolean
-) : RecyclerView.ItemDecoration() {
-
-    override fun getItemOffsets(
-        outRect: Rect,
-        view: View,
-        parent: RecyclerView,
-        state: RecyclerView.State
-    ) {
-        val position = parent.getChildAdapterPosition(view)
-        val column = position % spanCount
-
-        if (includeEdge) {
-            outRect.left = spacing - column * spacing / spanCount
-            outRect.right = (column + 1) * spacing / spanCount
-            if (position < spanCount) outRect.top = spacing
-            outRect.bottom = spacing
-        } else {
-            outRect.left = column * spacing / spanCount
-            outRect.right = spacing - (column + 1) * spacing / spanCount
-            if (position >= spanCount) outRect.top = spacing
-        }
     }
 }

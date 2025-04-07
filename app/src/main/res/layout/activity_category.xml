@@ -1,71 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/white"
+    tools:menu="@menu/menu">
 
-    <!-- Titre principal -->
-    <TextView
-        android:layout_width="match_parent"
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="182dp"
         android:layout_height="wrap_content"
-        android:text="Catégories"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-    <!-- Barre de recherche -->
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/arrow_back" />
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="115dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:text="categories"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Search -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/searchInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Rechercher..."
-        app:startIconDrawable="@drawable/search"
-        app:endIconMode="clear_text"
-        app:boxBackgroundMode="outline"
-        android:layout_marginBottom="16dp">
+        android:layout_below="@id/headerLayout"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="6dp">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/searchInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="61dp"
+            android:hint="search..."
+            android:background="@drawable/edittext_rounded_shadow"
             android:imeOptions="actionSearch"
-            android:inputType="text"/>
+            android:shadowColor="@color/gray_dark" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Filtre "Toutes catégories" -->
-    <com.google.android.material.chip.ChipGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/allCategoriesChip"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Toutes catégories"
-            android:checkable="true"
-            android:checked="true"/>
-    </com.google.android.material.chip.ChipGroup>
-
-    <!-- ProgressBar -->
+    <!-- ProgressBar (centré) -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
-    <!-- RecyclerView pour les catégories -->
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCategories"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/bottom_navigation"
+        android:layout_below="@id/searchInputLayout"
+        android:layout_marginBottom="-5dp"
         android:clipToPadding="false"
-        tools:listitem="@layout/item_category"/>
-</LinearLayout>
+        android:padding="8dp" />
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grona"
+        app:itemIconTint="@drawable/nav_color_selector"
+        app:itemTextColor="@color/grey"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/menu" />
+
+</RelativeLayout>
+
+
+
 

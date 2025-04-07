@@ -9,58 +9,123 @@
     <!-- Contenu principal -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:padding="0dp"
         android:layout_height="match_parent">
+
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
-            android:layout_width="419dp"
-            android:layout_height="46dp"
-            android:layout_gravity="bottom"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            app:backgroundTint="@color/grona"
-            app:itemIconTint="@color/white"
-            app:itemTextColor="@color/white"
-            app:labelVisibilityMode="unlabeled"
+            android:layout_width="413dp"
+            android:layout_height="69dp"
+            android:background="@color/grona"
+
+            app:itemIconTint="@drawable/nav_color_selector"
+            app:itemTextColor="@color/grey"
+            app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:menu="@menu/menu" />
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager"
-            android:layout_width="416dp"
-            android:layout_height="440dp"
-            android:layout_marginBottom="340dp"
-            android:background="@drawable/rounded_bottom_right"
-            android:clipToOutline="true"
-            android:elevation="4dp"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+
+
+
+        <FrameLayout
+            android:id="@+id/slider_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="19dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView4"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"/>
+
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- ViewPager -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToOutline="true"
+                android:background="@drawable/rounded_bottom_right"/>
+
+            <!-- Titre + Menu -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+
+                android:padding="24dp">
+
+                <TextView
+                    android:id="@+id/title_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:shadowColor="#80000000"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="4"
+                    android:text="Bottleour Homeware"
+                    android:textColor="@color/white"
+                    android:textSize="34sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/subtitle_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_text"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginTop="60dp"
+                    android:shadowColor="#80000000"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:text="Witterna Flugman Rezoliza,\nand Beauty Bloccoma"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/menu_icon"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_more_vert_white" />
+            </RelativeLayout>
+        </FrameLayout>
+
+
+
+
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="400dp"
             android:layout_gravity="center_horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/viewPager"
+            android:layout_marginTop="400dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/viewPager"
+            tools:ignore="NotSibling" />
 
         <!-- Horizontal ScrollView pour les bestsellers -->
 
         <TextView
             android:id="@+id/see_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="28dp"
+            android:layout_width="83dp"
+            android:layout_height="27dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:minHeight="48dp"
             android:onClick="onSeeMoreClicked"
+            android:shadowColor="#613D3D"
+            android:shadowDx="1"
+            android:shadowDy="2"
             android:text="see more"
             android:textColor="#8F5454"
             app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
@@ -70,9 +135,9 @@
 
         <HorizontalScrollView
             android:id="@+id/horizontalScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="261dp"
-            android:layout_marginBottom="20dp"
+            android:layout_width="415dp"
+            android:layout_height="295dp"
+
             android:fillViewport="true"
             android:scrollbars="none"
             app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
@@ -83,19 +148,20 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
                 android:orientation="horizontal">
 
                 <!-- Premier produit -->
                 <FrameLayout
                     android:layout_width="185dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginRight="8dp">
 
                     <ImageView
                         android:id="@+id/imageView38"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="178dp"
+                        android:layout_height="309dp"
                         android:scaleType="centerCrop"
                         app:srcCompat="@drawable/produit1" />
 
@@ -197,11 +263,14 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="23dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="244dp"
-            android:layout_marginBottom="17dp"
+            android:layout_marginEnd="214dp"
+            android:layout_marginBottom="10dp"
             android:fontFamily="sans-serif"
+            android:shadowColor="#171616"
+            android:shadowDx="1"
+            android:shadowDy="2"
             android:text="Bestseller"
             android:textColor="#512828"
             android:textSize="20sp"
@@ -209,6 +278,7 @@
             app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
             app:layout_constraintEnd_toStartOf="@+id/see_more"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewPager" />
+            app:layout_constraintTop_toBottomOf="@+id/viewPager"
+            tools:ignore="NotSibling" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

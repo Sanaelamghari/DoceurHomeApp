@@ -1,5 +1,6 @@
 package com.example.doceurhomeapp
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -16,26 +18,69 @@ class MycartActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var totalPriceText: TextView
     private lateinit var cartAdapter: CartAdapter
+    private lateinit var bottomNavigationView: BottomNavigationView
     private var cartItems = mutableListOf<CartItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mycart)
 
+        // Initialisation des vues
         recyclerView = findViewById(R.id.recyclerViewCart)
-        totalPriceText = findViewById(R.id.totalPriceText) // ✅ Lier la TextView
+        totalPriceText = findViewById(R.id.totalPriceText)
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
 
+        // Configuration du RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        cartAdapter = CartAdapter(cartItems, { item, newQuantity ->
-            updateCartQuantity(item, newQuantity)
-        }, { total ->
-            totalPriceText.text = "Total: ${total} $" // ✅ Mettre à jour l'affichage du total
-        })
-
+        cartAdapter = CartAdapter(cartItems,
+            { item, newQuantity -> updateCartQuantity(item, newQuantity) },
+            { total -> updateTotalDisplay(total) }
+        )
         recyclerView.adapter = cartAdapter
 
-        fetchCartItems() // ✅ Récupération des produits
+        // Configuration de la navigation
+        setupBottomNavigation()
+
+        // Chargement des articles du panier
+        fetchCartItems()
+    }
+
+    private fun setupBottomNavigation() {
+        bottomNavigationView.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_home -> {
+                    navigateTo(MainActivity::class.java)
+                    finish()
+                    true
+                }
+                R.id.nav_list -> {
+                    navigateTo(CategoryActivity::class.java)
+                    finish()
+                    true
+                }
+                R.id.nav_cart -> {
+                    // Déjà sur la page du panier
+                    true
+                }
+                R.id.nav_profile -> {
+                    navigateTo(Favorites::class.java)
+                    finish()
+                    true
+                }
+                else -> false
+            }.also { result ->
+                if (result) overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
+        }
+        bottomNavigationView.selectedItemId = R.id.nav_cart
+    }
+
+    private fun <T : Activity> navigateTo(activityClass: Class<T>) {
+        val intent = Intent(this, activityClass).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+        startActivity(intent)
     }
 
     private fun fetchCartItems() {
@@ -62,18 +107,18 @@ class MycartActivity : AppCompatActivity() {
                     val quantity = (item["quantity"] as? Number)?.toInt() ?: 1
 
                     cartItems.add(CartItem(id, name, price, imageUrl, quantity))
-
                 } catch (e: Exception) {
                     Log.e("MyCartActivity", "❌ Erreur conversion item: $item", e)
                 }
             }
 
             cartAdapter.notifyDataSetChanged()
-            updateTotal() // ✅ Calculer le total après récupération des produits
+            updateTotal()
         }.addOnFailureListener { e ->
             Log.e("MyCartActivity", "❌ Erreur Firebase : ${e.message}", e)
         }
     }
+
     private fun updateCartQuantity(item: CartItem, newQuantity: Int) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val cartRef = FirebaseFirestore.getInstance().collection("paniers").document(userId)
@@ -93,14 +138,12 @@ class MycartActivity : AppCompatActivity() {
                 cartRef.update("products", updatedProducts)
                     .addOnSuccessListener {
                         Log.d("MyCartActivity", "✅ Quantité mise à jour pour ${item.name} à $newQuantity")
-
                         item.quantity = newQuantity
                         val position = cartItems.indexOfFirst { it.id == item.id }
                         if (position != -1) {
                             cartAdapter.notifyItemChanged(position)
                         }
-
-                        cartAdapter.updateTotal() // ✅ Recalculer le total après mise à jour
+                        cartAdapter.updateTotal()
                     }
                     .addOnFailureListener { e ->
                         Log.e("MyCartActivity", "❌ Erreur mise à jour quantité : ${e.message}", e)
@@ -111,12 +154,15 @@ class MycartActivity : AppCompatActivity() {
         }
     }
 
-
-    // ✅ Fonction pour recalculer le total du panier
-    private fun updateTotal() {
-        val total = cartItems.sumOf { it.price * it.quantity }
+    private fun updateTotalDisplay(total: Double) {
         totalPriceText.text = "Total: ${total} $"
     }
+
+    private fun updateTotal() {
+        val total = cartItems.sumOf { it.price * it.quantity }
+        updateTotalDisplay(total)
+    }
+
     fun goToPayment(view: View) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId == null) {
@@ -128,7 +174,7 @@ class MycartActivity : AppCompatActivity() {
 
         cartRef.get().addOnSuccessListener { document ->
             if (document.exists()) {
-                val total = cartItems.sumOf { it.price * it.quantity } // Calcul du total
+                val total = cartItems.sumOf { it.price * it.quantity }
                 val commande = hashMapOf(
                     "userId" to userId,
                     "cartId" to document.id,
@@ -140,11 +186,8 @@ class MycartActivity : AppCompatActivity() {
                     .add(commande)
                     .addOnSuccessListener { docRef ->
                         Log.d("MycartActivity", "✅ Commande enregistrée avec ID : ${docRef.id}")
-
-                        // Afficher un message ou naviguer vers une autre page
                         val intent = Intent(this, paimentActivity::class.java)
                         startActivity(intent)
-
                     }
                     .addOnFailureListener { e ->
                         Log.e("MycartActivity", "❌ Erreur enregistrement commande : ${e.message}", e)
@@ -156,6 +199,5 @@ class MycartActivity : AppCompatActivity() {
             Log.e("MycartActivity", "❌ Erreur récupération panier : ${e.message}", e)
         }
     }
-
 }
 

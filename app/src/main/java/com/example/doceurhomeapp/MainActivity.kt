@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,17 +26,49 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
 
-    // Dans MainActivity.kt
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Initialisation Firebase
+        // Nouveau: Initialisation des vues pour le header
+        val titleTextView: TextView = findViewById(R.id.title_text)
+        val subtitleTextView: TextView = findViewById(R.id.subtitle_text)
+        val menuIcon: ImageView = findViewById(R.id.menu_icon)
+
+        // Configuration du texte
+        titleTextView.text = "Douceur Homeware"
+        subtitleTextView.text = "Where Elegance Resides,\nand Beauty Blossoms"
+
+        // Configuration du menu
+        menuIcon.setOnClickListener { view ->
+            PopupMenu(this, view).apply {
+                menuInflater.inflate(R.menu.main_menu, menu)
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.menu_login -> {
+                            startActivity(Intent(this@MainActivity, sign_in::class.java))
+                            true
+                        }
+                        R.id.menu_register -> {
+                            startActivity(Intent(this@MainActivity, SignupActivity::class.java))
+                            true
+                        }
+                        R.id.menu_logout -> {
+                            auth.signOut()
+                            Toast.makeText(this@MainActivity, "Déconnexion réussie", Toast.LENGTH_SHORT).show()
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                show()
+            }
+        }
+
+        // Votre code existant inchangé ci-dessous
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        // Vérifier si un utilisateur est connecté
         auth.currentUser?.let { user ->
             Log.d("FirebaseAuth", "Utilisateur connecté: ${user.email} (UID: ${user.uid})")
             Toast.makeText(this, "Connecté en tant que ${user.email}", Toast.LENGTH_LONG).show()
@@ -44,22 +77,14 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Aucun utilisateur connecté", Toast.LENGTH_LONG).show()
         }
 
-        // Vérifier la connexion à Firestore
         testFirebaseConnection()
 
-        // Initialisation des vues
-        setupViews()
-    }
-
-    private fun setupViews() {
         val buyText: TextView = findViewById(R.id.buy_text)
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
 
-        // Initialisation du ViewPager2 et TabLayout
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.tabLayout)
 
-        // Liste des images à afficher dans le slider
         val images = listOf(
             R.drawable.tab3,
             R.drawable.tab45,
@@ -68,55 +93,44 @@ class MainActivity : AppCompatActivity() {
             R.drawable.vig,
             R.drawable.riche,
             R.drawable.tab52
-
         )
 
-        // Adapter pour le ViewPager2
         val adapter = ImageSliderAdapter(images)
         viewPager.adapter = adapter
 
-        // Lier le TabLayout au ViewPager2
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            // Optionnel: Personnaliser les indicateurs de page
         }.attach()
 
-        // Clic sur "Buy"
-        buyText.setOnClickListener { navigateTo(connectActivity::class.java) }
-
-        // Configuration de la barre de navigation en bas
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_home -> {
-                    // Déjà sur la page principale
+                    // Pas besoin de recreate() si vous êtes déjà sur Home
                     true
                 }
                 R.id.nav_list -> {
-                    // Redirige vers CategoryActivity
                     navigateTo(CategoryActivity::class.java)
                     true
                 }
                 R.id.nav_cart -> {
-                    // Redirige vers connectActivity
                     navigateTo(connectActivity::class.java)
                     true
                 }
                 R.id.nav_profile -> {
-                    // Redirige vers AddProductActivity
                     navigateTo(Favorites::class.java)
                     true
                 }
                 else -> false
+            }.also { result ->
+                if (result) overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             }
         }
     }
 
-    // Fonction générique pour changer d'activité
     private fun navigateTo(destination: Class<*>) {
         val intent = Intent(this, destination)
         startActivity(intent)
     }
 
-    // Vérifier la connexion à Firestore
     private fun testFirebaseConnection() {
         db.collection("produits").limit(1).get()
             .addOnSuccessListener {
@@ -129,7 +143,6 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-    // Adapter pour le ViewPager2
     class ImageSliderAdapter(private val images: List<Int>) : RecyclerView.Adapter<ImageSliderAdapter.ImageViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
@@ -151,10 +164,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     fun onSeeMoreClicked(view: View) {
         val intent = Intent(this, Bestsellers::class.java)
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
-
 }
