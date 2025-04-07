@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:background="@drawable/bg_shadow">
+
+        <!-- Image produit avec coins arrondis -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            app:cardCornerRadius="8dp">
+
+            <ImageView
+                android:id="@+id/productImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/detail" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- Contenu texte (centre) - exactement comme dans votre code -->
+        <LinearLayout
+            android:layout_width="235dp"
+            android:layout_height="74dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp">
+
+            <TextView
+                android:id="@+id/productName"
+                android:layout_width="217dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="25dp"
+                android:text="High Protein"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/productPrice"
+                android:layout_width="168dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="25$"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Partie droite - exactement comme dans votre code -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="15dp"
+                app:srcCompat="@drawable/plenne" />
+
+            <ImageView
+                android:id="@+id/imageView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/add_shopping" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

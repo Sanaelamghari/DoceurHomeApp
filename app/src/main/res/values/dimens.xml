@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Espacement entre les éléments -->
+    <dimen name="grid_spacing">8dp</dimen>
+    <!-- Décalage vertical pour la colonne de droite -->
+    <dimen name="grid_offset">40dp</dimen>
+    <!-- Marge supérieure pour la première colonne -->
+    <dimen name="grid_top_padding">20dp</dimen>
+
+</resources>
