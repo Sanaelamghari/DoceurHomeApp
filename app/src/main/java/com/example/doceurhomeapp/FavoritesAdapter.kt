@@ -14,6 +14,7 @@ class FavoritesAdapter(
     private val onFavoriteClick: (Product) -> Unit,
     private val onAddToCartClick: (Product) -> Unit
 
+
 ) : RecyclerView.Adapter<FavoritesAdapter.FavoritesViewHolder>() {
 
     inner class FavoritesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

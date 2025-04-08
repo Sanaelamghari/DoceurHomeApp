@@ -30,7 +30,7 @@ class Favorites : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorites)
 
-        // AJOUT: Configuration de la Toolbar avec flèche de retour
+        // Configuration de la Toolbar avec flèche de retour
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         toolbar.setNavigationOnClickListener {
@@ -206,7 +206,37 @@ class Favorites : AppCompatActivity() {
     }
 
     private fun addToCart(product: Product) {
-        Toast.makeText(this, "${product.name} ajouté au panier", Toast.LENGTH_SHORT).show()
+        CartUtils.addToCart(this, product,
+            onSuccess = {
+                Toast.makeText(this, "${product.name} ajouté au panier", Toast.LENGTH_SHORT).show()
+                updateCartCounter()
+            },
+            onFailure = { e ->
+                Toast.makeText(this, "Erreur lors de l'ajout au panier", Toast.LENGTH_SHORT).show()
+                Log.e("Favorites", "Error adding to cart", e)
+            }
+        )
+    }
+
+    private fun updateCartCounter() {
+        val userId = auth.currentUser?.uid ?: return
+
+        db.collection("paniers")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                val count = if (document.exists()) {
+                    (document.get("products") as? List<*>)?.size ?: 0
+                } else {
+                    0
+                }
+
+                // Mettre à jour votre badge de panier ici
+                findViewById<TextView>(R.id.cartCounter)?.text = count.toString()
+            }
+            .addOnFailureListener { e ->
+                Log.e("Favorites", "Error updating cart counter", e)
+            }
     }
 
     private fun showEmptyState() {

@@ -16,6 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             android:orientation="vertical">
 
             <!-- Slider d'images (identique à votre version) -->
@@ -26,8 +27,8 @@
                 android:layout_margin="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                app:srcCompat="@drawable/arrow_back"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/arrow_back" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -144,37 +145,15 @@
                 android:textSize="20sp" />
 
             <!-- Catégorie et favori (identique à votre version) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="33dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="84dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Categorie"
-                    android:textColor="#595959"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="44dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="250dp"
-                    app:srcCompat="@drawable/favorite_selector" />
-            </LinearLayout>
 
             <!-- Bouton Ajouter au panier (identique à votre version) -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/addToCartButton"
+
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="70dp"
-                android:layout_marginTop="15dp"
                 android:background="@color/grey"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
