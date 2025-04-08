@@ -18,8 +18,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:layout_width="235dp"
-            android:layout_height="wrap_content"
+            android:layout_width="289dp"
+            android:layout_height="107dp"
             android:layout_marginLeft="5dp"
             android:orientation="horizontal">
 
@@ -27,21 +27,24 @@
                 android:id="@+id/payButton"
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="15dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/text_secondary"
                 android:text="Checkout"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/totalPriceText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="15dp"
                 android:layout_weight="1"
                 android:text="Total : 86.0 $"
-                android:textColor="@color/black"
+                android:textColor="@color/error"
                 android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>

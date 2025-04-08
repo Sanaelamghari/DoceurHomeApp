@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/grona"
-        app:title="Mes Favoris"
+        app:title="My favorites"
+        app:navigationIcon="@drawable/arrow_back_wihte"
         app:titleTextColor="@android:color/white"
 
         app:layout_constraintTop_toTopOf="parent"/>

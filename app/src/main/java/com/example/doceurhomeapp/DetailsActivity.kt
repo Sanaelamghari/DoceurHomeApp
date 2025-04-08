@@ -33,7 +33,13 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
 
-        // Initialisation des vues
+        // AJOUT: Gestion de la flèche de retour (identique aux autres activités)
+        findViewById<ImageView>(R.id.imageView8)?.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        } ?: Log.w("DetailsActivity", "Flèche de retour non trouvée")
+
+        // Initialisation des vues existantes
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.tabDots)
         productName = findViewById(R.id.productName)
@@ -56,7 +62,6 @@ class DetailsActivity : AppCompatActivity() {
         fetchProductDetails(productId)
         setupStarRating()
     }
-
     private fun fetchProductDetails(productId: String) {
         firestore.collection("products").document(productId)
             .get()

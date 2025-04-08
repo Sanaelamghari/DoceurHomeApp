@@ -1,4 +1,6 @@
 package com.example.doceurhomeapp
+
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
@@ -7,27 +9,28 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.concurrent.ExecutionException
-
 
 class ProductsActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var productAdapter: ProductAdapter
     private lateinit var searchEditText: EditText
+    private lateinit var bottomNavigationView: BottomNavigationView
     private val firestore = FirebaseFirestore.getInstance()
     private val productList = mutableListOf<Product>()
     private val filteredProductList = mutableListOf<Product>()
     private val auth = FirebaseAuth.getInstance()
-
     private var cartCounter = 0
     private var selectedCategory: String? = null
 
@@ -35,45 +38,60 @@ class ProductsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_products2)
 
-        // Initialisation de la recherche
-        searchEditText = findViewById(R.id.cherche)
+        // AJOUT: Gestion de la flèche de retour
+        findViewById<ImageView>(R.id.backButton)?.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        } ?: Log.w("ProductsActivity", "Flèche de retour non trouvée")
+
+        // Le reste de votre code existant...
+        bottomNavigationView = findViewById(R.id.bottom_navigation) ?: run {
+            Log.e("ProductsActivity", "BottomNavigationView non trouvé")
+            finish()
+            return
+        }
+        setupBottomNavigation()
+
+        searchEditText = findViewById(R.id.cherche) ?: run {
+            Log.w("ProductsActivity", "Search EditText non trouvé")
+            finish()
+            return
+        }
         setupSearch()
 
-        // Récupérer la catégorie sélectionnée depuis l'Intent
         selectedCategory = intent.getStringExtra("CATEGORY_NAME") ?: run {
             Toast.makeText(this, "Catégorie non trouvée", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
-        // Initialisation du RecyclerView avec GridLayoutManager
-        recyclerView = findViewById(R.id.recyclerViewProducts)
+        recyclerView = findViewById(R.id.recyclerViewProducts) ?: run {
+            Log.e("ProductsActivity", "RecyclerView non trouvé")
+            finish()
+            return
+        }
+
         val gridLayoutManager = GridLayoutManager(this, 2)
         recyclerView.layoutManager = gridLayoutManager
 
-        // Configuration du décalage vertical entre les colonnes
         recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 val position = parent.getChildAdapterPosition(view)
                 val spacing = resources.getDimensionPixelSize(R.dimen.grid_spacing)
 
-                // Appliquer un décalage pour les éléments de la colonne de droite (positions impaires)
                 if (position % 2 == 1) {
                     outRect.top = resources.getDimensionPixelSize(R.dimen.grid_offset)
                 }
 
-                // Espacement standard
                 outRect.left = spacing / 2
                 outRect.right = spacing / 2
                 outRect.bottom = spacing
             }
         })
 
-        // Padding pour le RecyclerView
         recyclerView.setPadding(0, resources.getDimensionPixelSize(R.dimen.grid_top_padding), 0, 0)
         recyclerView.clipToPadding = false
 
-        // Initialisation de l'adaptateur
         productAdapter = ProductAdapter(
             productList,
             onAddToCartClick = { product -> addToCart(product) },
@@ -81,25 +99,59 @@ class ProductsActivity : AppCompatActivity() {
         )
         recyclerView.adapter = productAdapter
 
-        // Gestion du clic sur l'icône panier
-        findViewById<ImageView>(R.id.cart).setOnClickListener {
+        findViewById<ImageView>(R.id.cart)?.setOnClickListener {
             startActivity(Intent(this, MycartActivity::class.java))
-        }
+        } ?: Log.w("ProductsActivity", "Bouton panier non trouvé")
 
-        // Écouteur d'état d'authentification
         FirebaseAuth.getInstance().addAuthStateListener {
             try {
                 refreshFavorites()
             } catch (e: ExecutionException) {
-                Log.w("BluetoothStats", "Impossible d'accéder à BluetoothActivityEnergyInfo", e)
+                Log.w("BluetoothStats", "Erreur d'authentification", e)
             } catch (e: RuntimeException) {
-                Log.w("BluetoothStats", "Impossible d'accéder à BluetoothActivityEnergyInfo", e)
+                Log.w("BluetoothStats", "Erreur d'authentification", e)
             }
         }
 
         fetchProductsFromFirestore()
         fetchCartCount()
     }
+    private fun setupBottomNavigation() {
+        bottomNavigationView.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_home -> {
+                    navigateTo(MainActivity::class.java)
+                    finish()
+                    true
+                }
+                R.id.nav_list -> {
+                    navigateTo(CategoryActivity::class.java)
+                    finish()
+                    true
+                }
+                R.id.nav_cart -> {
+                    // Déjà sur la page panier si on clique depuis le bouton
+                    true
+                }
+                R.id.nav_profile -> {
+                    navigateTo(Favorites::class.java)
+                    finish()
+                    true
+                }
+                else -> false
+            }.also { result ->
+                if (result) overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
+        }
+    }
+
+    private fun <T : Activity> navigateTo(activityClass: Class<T>) {
+        val intent = Intent(this, activityClass).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+        startActivity(intent)
+    }
+
     private fun setupSearch() {
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -114,18 +166,14 @@ class ProductsActivity : AppCompatActivity() {
         filteredProductList.clear()
 
         if (query.isEmpty()) {
-            // Si la recherche est vide, afficher tous les produits
             filteredProductList.addAll(productList)
         } else {
-            // Filtrer les produits dont le nom contient la requête (insensible à la casse)
             for (product in productList) {
                 if (product.name.contains(query, ignoreCase = true)) {
                     filteredProductList.add(product)
                 }
             }
         }
-
-        // Mettre à jour l'adaptateur avec la liste filtrée
         productAdapter.updateList(filteredProductList)
     }
 
@@ -137,7 +185,6 @@ class ProductsActivity : AppCompatActivity() {
                 productList.clear()
                 documents.forEach { document ->
                     try {
-                        // Méthode 1: Conversion manuelle
                         val data = document.data
                         val product = Product(
                             id = document.id,
@@ -166,10 +213,8 @@ class ProductsActivity : AppCompatActivity() {
                 Toast.makeText(this, "Erreur de chargement", Toast.LENGTH_SHORT).show()
                 Log.e("ProductsActivity", "Load error", e)
             }
-
     }
 
-    // Modifier loadInitialFavorites():
     private fun loadInitialFavorites() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -188,7 +233,6 @@ class ProductsActivity : AppCompatActivity() {
             }
     }
 
-    // Ajoutez cette méthode :
     private fun refreshFavorites() {
         if (auth.currentUser != null) {
             loadInitialFavorites()
@@ -197,8 +241,6 @@ class ProductsActivity : AppCompatActivity() {
             productAdapter.notifyDataSetChanged()
         }
     }
-
-
 
     private fun fetchCartCount() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -218,10 +260,8 @@ class ProductsActivity : AppCompatActivity() {
     private fun addToCart(product: Product) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val cartRef = firestore.collection("paniers").document(userId)
-
         cartRef.get().addOnSuccessListener { document ->
             val cartItems = mutableListOf<CartItem>()
-
             if (document.exists()) {
                 val existingCart = document.get("products") as? List<Map<String, Any>> ?: listOf()
                 cartItems.addAll(existingCart.map {
@@ -234,14 +274,12 @@ class ProductsActivity : AppCompatActivity() {
                     )
                 })
             }
-
             val existingItem = cartItems.find { it.id == product.id }
             if (existingItem != null) {
                 existingItem.quantity += 1
             } else {
                 cartItems.add(CartItem(product.id, product.name, product.price.toDouble(), product.imageUrl, 1))
             }
-
             cartRef.set(mapOf("products" to cartItems.map {
                 mapOf(
                     "id" to it.id,
@@ -276,10 +314,4 @@ class ProductsActivity : AppCompatActivity() {
         }
         startActivity(intent)
     }
-
-
-
-
-
-
 }

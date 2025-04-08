@@ -27,11 +27,22 @@ class CategoryActivity : AppCompatActivity() {
         binding = ActivityCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Gestion du clic sur la flèche de retour (imageView6)
+        binding.backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()  // Retour à l'écran précédent
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)  // Animation
+        }
+
         setupRecyclerView()
         setupSearch()
-        setupBottomNavigation() // Ajout de la configuration de la navigation
+        setupBottomNavigation()
         loadCategories()
     }
+
+
+
+
+
     private fun setupBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
