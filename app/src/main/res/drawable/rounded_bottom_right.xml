@@ -3,9 +3,9 @@
     android:shape="rectangle">
     <!-- Seul le coin en bas à droite est arrondi (20dp) -->
     <corners
-        android:bottomRightRadius="120dp"
+        android:bottomRightRadius="100dp"
         android:topLeftRadius="0dp"
         android:topRightRadius="0dp"
         android:bottomLeftRadius="0dp"/>
-    <solid android:color="@color/white"/> <!-- Couleur de fond -->
+    <!--<solid android:color="@color/white"/>  Couleur de fond -->
 </shape>

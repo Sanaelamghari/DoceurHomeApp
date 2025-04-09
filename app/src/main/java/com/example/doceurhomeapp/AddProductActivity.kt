@@ -1,13 +1,15 @@
 package com.example.doceurhomeapp
 
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.content.Intent
+import androidx.activity.viewModels
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
@@ -23,6 +25,7 @@ import java.util.concurrent.TimeUnit
 
 class AddProductActivity : AppCompatActivity() {
 
+
     // Variables pour les composants UI
     private lateinit var etProductName: EditText
     private lateinit var etProductDescription: EditText
@@ -34,6 +37,11 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var btnAddCategory: Button
     private lateinit var spinnerCategories: Spinner
     private lateinit var btnAddProduct: Button
+    private lateinit var etBestseller: CheckBox
+    private lateinit var btnManageBestsellers: Button
+    private lateinit var spinnerBestsellers: Spinner
+    private val bestsellers = mutableListOf<String>()
+    private lateinit var bestsellersAdapter: ArrayAdapter<String>
 
     // Variables pour la gestion des images et des données
     private var selectedCategoryImageUri: Uri? = null
@@ -46,11 +54,22 @@ class AddProductActivity : AppCompatActivity() {
     // Constantes pour Cloudinary
     private val CLOUD_NAME = "dbmk56fhn"
     private val UPLOAD_PRESET = "doceurhome_upload"
+    private lateinit var spinnerProducts: Spinner
+    private val products = mutableListOf<String>()
+    private lateinit var productsAdapter: ArrayAdapter<String>
     private val CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/$CLOUD_NAME/image/upload"
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_product)
+        //etBestseller = findViewById(R.id.etBestseller)
+        btnManageBestsellers = findViewById(R.id.btnManageBestsellers)
+        spinnerBestsellers = findViewById(R.id.spinnerProducts)
+
+        bestsellersAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, bestsellers)
+        bestsellersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerBestsellers.adapter = bestsellersAdapter
 
         // Initialisation des composants
         etProductName = findViewById(R.id.etProductName)
@@ -69,8 +88,14 @@ class AddProductActivity : AppCompatActivity() {
         categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategories.adapter = categoriesAdapter
 
+        spinnerProducts = findViewById(R.id.spinnerProducts)
+        productsAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, products)
+        productsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerProducts.adapter = productsAdapter
+
         // Charger les catégories existantes
         loadCategories()
+        loadProducts()
 
         // Gestion des clics
         btnSelectCategoryImage.setOnClickListener {
@@ -102,6 +127,7 @@ class AddProductActivity : AppCompatActivity() {
                 addCategoryToFirestore(categoryName, imageUrl)
             }
         }
+
 
         btnAddProduct.setOnClickListener {
             Log.d("AddProduct", "Bouton Ajouter Produit cliqué")
@@ -135,6 +161,17 @@ class AddProductActivity : AppCompatActivity() {
                     // Enregistrer le produit dans Firestore
                     saveProductToFirestore(productName, productDescription, productPrice, categoryName, imageUrl, detailImageUrls)
                 }
+            }
+        }
+
+        loadBestsellers()
+
+        btnManageBestsellers.setOnClickListener {
+            val selectedProduct = spinnerProducts.selectedItem?.toString()
+            if (selectedProduct != null) {
+                toggleBestsellerStatus(selectedProduct)
+            } else {
+                Toast.makeText(this, "Veuillez sélectionner un produit", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -282,6 +319,7 @@ class AddProductActivity : AppCompatActivity() {
     }
 
     // Enregistrer le produit dans Firestore
+    // Modifiez la méthode saveProductToFirestore pour mettre à jour la liste après ajout
     private fun saveProductToFirestore(
         productName: String,
         productDescription: String,
@@ -305,12 +343,23 @@ class AddProductActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 Log.d("Firestore", "Produit ajouté avec succès")
                 Toast.makeText(this, "Produit ajouté avec succès", Toast.LENGTH_SHORT).show()
-                finish() // Fermer l'activité après l'ajout
+                loadProducts() // Recharger la liste des produits
+                loadCategories() // Recharger les catégories au cas où
+                clearForm() // Optionnel: vider le formulaire
             }
             .addOnFailureListener { e ->
                 Log.e("Firestore", "Échec de l'ajout du produit: ${e.message}")
                 Toast.makeText(this, "Erreur lors de l'ajout du produit", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    // Ajoutez cette méthode pour vider le formulaire (optionnel)
+    private fun clearForm() {
+        etProductName.text.clear()
+        etProductDescription.text.clear()
+        etProductPrice.text.clear()
+        selectedProductImageUri = null
+        selectedDetailImageUris.clear()
     }
     // Charger les catégories depuis Firestore
     private fun loadCategories() {
@@ -331,6 +380,31 @@ class AddProductActivity : AppCompatActivity() {
             }
     }
 
+    private fun loadProducts() {
+        Log.d("Firestore", "Chargement des produits")
+        firestore.collection("products")
+            .get()
+            .addOnSuccessListener { result ->
+                products.clear()
+                for (document in result) {
+                    val productName = document.getString("name") ?: ""
+                    products.add(productName)
+                }
+                productsAdapter.notifyDataSetChanged()
+                Log.d("Firestore", "Produits chargés: $products")
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Échec du chargement des produits: ${e.message}")
+            }
+    }
+
+
+    // Modifiez la méthode saveProductToFirestore pour mettre à jour la liste après ajout
+
+
+    // Ajoutez cette méthode pour vider le formulaire (optionnel)
+
+
     // Convertir Uri en File
     private fun getFileFromUri(uri: Uri): File? {
         return try {
@@ -346,6 +420,46 @@ class AddProductActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e("FileError", "Erreur de conversion URI en fichier: ${e.message}")
             null
+        }
+
+    }
+
+    private fun loadBestsellers() {
+        firestore.collection("bestsellers")
+            .get()
+            .addOnSuccessListener { result ->
+                bestsellers.clear()
+                for (document in result) {
+                    val productName = document.getString("name") ?: ""
+                    bestsellers.add(productName)
+                }
+                bestsellersAdapter.notifyDataSetChanged()
+            }
+    }
+
+    private fun toggleBestsellerStatus(productName: String) {
+        val bestsellerRef = firestore.collection("bestsellers").document(productName)
+
+        bestsellerRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                // Supprimer des bestsellers
+                bestsellerRef.delete()
+                    .addOnSuccessListener {
+                        loadBestsellers()
+                        Toast.makeText(this, "Produit retiré des bestsellers", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                // Ajouter aux bestsellers
+                val product = hashMapOf(
+                    "name" to productName,
+                    "timestamp" to System.currentTimeMillis()
+                )
+                bestsellerRef.set(product)
+                    .addOnSuccessListener {
+                        loadBestsellers()
+                        Toast.makeText(this, "Produit ajouté aux bestsellers", Toast.LENGTH_SHORT).show()
+                    }
+            }
         }
     }
 

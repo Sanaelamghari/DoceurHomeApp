@@ -8,20 +8,19 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ProductAdapter(
     private var productList: List<Product>,
+
     private val onAddToCartClick: (Product) -> Unit,
-    private val onProductImageClick: (Product) -> Unit
+    private val onProductImageClick: (Product) -> Unit,
+    private val showBestsellerBadge: Boolean = false // Nouveau paramètre){}){}
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     private val db = FirebaseFirestore.getInstance()
@@ -33,6 +32,7 @@ class ProductAdapter(
         val productPrice: TextView = view.findViewById(R.id.productPrice)
         val addToCartButton: Button = view.findViewById(R.id.addToCartButton)
         val favoriteIcon: ImageView = view.findViewById(R.id.favoriteIcon)
+        val bestsellerBadge: View = view.findViewById(R.id.bestsellerBadge) // Ajoutez cette lig
 
         fun bind(product: Product) {
             Glide.with(itemView.context)
@@ -56,6 +56,11 @@ class ProductAdapter(
                 Log.e("ProductAdapter", "Produit sans ID - ${product.name}")
                 favoriteIcon.visibility = View.GONE // Cache l'icône si ID invalide
                 return
+            }
+            bestsellerBadge.visibility = if (showBestsellerBadge && product.isBestseller) {
+                View.VISIBLE
+            } else {
+                View.GONE
             }
 
             checkFavoriteStatus(product)

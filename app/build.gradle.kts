@@ -59,7 +59,8 @@ android {
 
         // Material Design (une seule déclaration)
         implementation ("com.google.android.material:material:1.9.0")
-
+        implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+        implementation ("androidx.activity:activity-ktx:1.4.0")
         implementation ("com.google.firebase:firebase-firestore:24.10.0")
         implementation ("com.google.firebase:firebase-auth:22.3.0")
         implementation ("com.google.android.gms:play-services-auth:20.7.0")
