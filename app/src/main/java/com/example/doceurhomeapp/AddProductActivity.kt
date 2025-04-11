@@ -3,18 +3,27 @@ package com.example.doceurhomeapp
 import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.activity.viewModels
+import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -27,6 +36,7 @@ class AddProductActivity : AppCompatActivity() {
 
 
     // Variables pour les composants UI
+
     private lateinit var etProductName: EditText
     private lateinit var etProductDescription: EditText
     private lateinit var etProductPrice: EditText
@@ -37,12 +47,8 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var btnAddCategory: Button
     private lateinit var spinnerCategories: Spinner
     private lateinit var btnAddProduct: Button
-    private lateinit var etBestseller: CheckBox
     private lateinit var btnManageBestsellers: Button
-    private lateinit var spinnerBestsellers: Spinner
-    private val bestsellers = mutableListOf<String>()
-    private lateinit var bestsellersAdapter: ArrayAdapter<String>
-
+    private lateinit var etBestseller: CheckBox
     // Variables pour la gestion des images et des données
     private var selectedCategoryImageUri: Uri? = null
     private var selectedProductImageUri: Uri? = null
@@ -50,7 +56,6 @@ class AddProductActivity : AppCompatActivity() {
     private val firestore = FirebaseFirestore.getInstance()
     private val categories = mutableListOf<String>()
     private lateinit var categoriesAdapter: ArrayAdapter<String>
-
     // Constantes pour Cloudinary
     private val CLOUD_NAME = "dbmk56fhn"
     private val UPLOAD_PRESET = "doceurhome_upload"
@@ -63,13 +68,10 @@ class AddProductActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_product)
-        //etBestseller = findViewById(R.id.etBestseller)
+        // Initialisation du bouton (ajoutez avec les autres findViewById)
         btnManageBestsellers = findViewById(R.id.btnManageBestsellers)
-        spinnerBestsellers = findViewById(R.id.spinnerProducts)
 
-        bestsellersAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, bestsellers)
-        bestsellersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerBestsellers.adapter = bestsellersAdapter
+        //etBestseller = findViewById(R.id.etBestseller)
 
         // Initialisation des composants
         etProductName = findViewById(R.id.etProductName)
@@ -164,16 +166,29 @@ class AddProductActivity : AppCompatActivity() {
             }
         }
 
-        loadBestsellers()
-
         btnManageBestsellers.setOnClickListener {
-            val selectedProduct = spinnerProducts.selectedItem?.toString()
-            if (selectedProduct != null) {
-                toggleBestsellerStatus(selectedProduct)
-            } else {
-                Toast.makeText(this, "Veuillez sélectionner un produit", Toast.LENGTH_SHORT).show()
+            val selectedProductName = spinnerProducts.selectedItem?.toString() ?: run {
+                Toast.makeText(this, "Sélectionnez un produit", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            // Récupérez les infos du produit depuis Firestore
+            firestore.collection("products")
+                .whereEqualTo("name", selectedProductName)
+                .limit(1)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (!querySnapshot.isEmpty) {
+                        val document = querySnapshot.documents[0]
+                        toggleBestsellerStatus(
+                            document.id,
+                            document.getString("name") ?: "",
+                            document.getString("imageUrl") ?: ""
+                        )
+                    }
+                }
         }
+
     }
 
     // Ouvrir le sélecteur d'images
@@ -424,42 +439,34 @@ class AddProductActivity : AppCompatActivity() {
 
     }
 
-    private fun loadBestsellers() {
-        firestore.collection("bestsellers")
-            .get()
-            .addOnSuccessListener { result ->
-                bestsellers.clear()
-                for (document in result) {
-                    val productName = document.getString("name") ?: ""
-                    bestsellers.add(productName)
+    private fun toggleBestsellerStatus(productId: String, productName: String, imageUrl: String) {
+        val bestsellerRef = firestore.collection("bestsellers").document(productId)
+
+        bestsellerRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                if (task.result?.exists() == true) {
+                    // Retirer des bestsellers
+                    bestsellerRef.delete()
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Produit retiré des bestsellers", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    // Ajouter aux bestsellers
+                    val bestsellerData = hashMapOf(
+                        "productId" to productId,
+                        "name" to productName,
+                        "imageUrl" to imageUrl,
+                        "timestamp" to FieldValue.serverTimestamp()
+                    )
+
+                    bestsellerRef.set(bestsellerData)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Produit ajouté aux bestsellers", Toast.LENGTH_SHORT).show()
+                        }
                 }
-                bestsellersAdapter.notifyDataSetChanged()
             }
-    }
-
-    private fun toggleBestsellerStatus(productName: String) {
-        val bestsellerRef = firestore.collection("bestsellers").document(productName)
-
-        bestsellerRef.get().addOnSuccessListener { document ->
-            if (document.exists()) {
-                // Supprimer des bestsellers
-                bestsellerRef.delete()
-                    .addOnSuccessListener {
-                        loadBestsellers()
-                        Toast.makeText(this, "Produit retiré des bestsellers", Toast.LENGTH_SHORT).show()
-                    }
-            } else {
-                // Ajouter aux bestsellers
-                val product = hashMapOf(
-                    "name" to productName,
-                    "timestamp" to System.currentTimeMillis()
-                )
-                bestsellerRef.set(product)
-                    .addOnSuccessListener {
-                        loadBestsellers()
-                        Toast.makeText(this, "Produit ajouté aux bestsellers", Toast.LENGTH_SHORT).show()
-                    }
-            }
+        }.addOnFailureListener { e ->
+            Toast.makeText(this, "Erreur: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 

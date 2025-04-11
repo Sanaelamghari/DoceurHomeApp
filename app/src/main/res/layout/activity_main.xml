@@ -115,28 +115,21 @@
             app:layout_constraintStart_toEndOf="@+id/bestseller_label"
             app:layout_constraintTop_toBottomOf="@+id/viewPager" />
 
-        <!-- HorizontalScrollView pour les bestsellers -->
-        <HorizontalScrollView
-            android:id="@+id/bestsellersScrollView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fillViewport="true"
-            android:scrollbars="none"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bestseller_label">
-
-            <LinearLayout
-                android:id="@+id/bestsellersContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp" />
-        </HorizontalScrollView>
-
         <!-- Bottom Navigation -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bestsellersRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bestseller_label"
+            tools:listitem="@layout/item_bestseller" />
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="0dp"
