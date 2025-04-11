@@ -20,7 +20,7 @@
             android:elevation="4dp">
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/totalPriceText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|top"
@@ -30,17 +30,7 @@
                 android:textColor="@color/black"
                 android:textSize="24sp" />
 
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="80dp"
-                android:layout_marginTop="200dp"
-                android:fontFamily="sans-serif"
-                android:text="Mantant : "
-                android:textColor="#4C4B4B"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+
 
         </FrameLayout>
 

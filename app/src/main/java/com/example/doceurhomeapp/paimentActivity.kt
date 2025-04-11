@@ -6,6 +6,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -42,6 +43,13 @@ class paimentActivity : AppCompatActivity() {
 
         btnConfirmPayment.setOnClickListener {
             savePaymentInfo()
+        }
+        val totalAmount = intent.getStringExtra("TOTAL_AMOUNT") ?: "00.00 $"
+        findViewById<TextView>(R.id.totalPriceText).apply {
+            text = totalAmount
+            // Style supplémentaire si besoin
+            setTextColor(ContextCompat.getColor(this@paimentActivity, R.color.black))
+            textSize = 24f
         }
     }
 

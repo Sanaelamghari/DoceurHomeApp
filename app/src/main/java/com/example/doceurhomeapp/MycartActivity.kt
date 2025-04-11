@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -19,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 
 class MycartActivity : AppCompatActivity() {
+    private lateinit var payButton: Button
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var totalPriceText: TextView
@@ -37,10 +40,18 @@ class MycartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mycart)
 
+
+
         recyclerView = findViewById(R.id.recyclerViewCart)
         totalPriceText = findViewById(R.id.totalPriceText)
         bottomNavigationView = findViewById(R.id.bottom_navigation)
 
+        payButton = findViewById(R.id.payButton)
+
+        // Gestion du clic
+        findViewById<Button>(R.id.payButton).setOnClickListener {
+            navigateToPayment()
+        }
         cartAdapter = CartAdapter(
             mutableListOf(),
             onQuantityChanged = { item, newQuantity ->
@@ -231,6 +242,15 @@ class MycartActivity : AppCompatActivity() {
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
         startActivity(intent)
+    }
+    private fun navigateToPayment() {
+        val totalAmount = findViewById<TextView>(R.id.totalPriceText).text.toString()
+
+        val intent = Intent(this, paimentActivity::class.java).apply {
+            putExtra("TOTAL_AMOUNT", totalAmount)
+        }
+        startActivity(intent)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
     override fun onDestroy() {
